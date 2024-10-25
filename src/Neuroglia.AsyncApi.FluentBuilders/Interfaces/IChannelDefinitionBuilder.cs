@@ -45,28 +45,6 @@ public interface IChannelDefinitionBuilder
     IChannelDefinitionBuilder WithBinding(IChannelBindingDefinition binding);
 
     /// <summary>
-    /// Defines and configures an operation of the <see cref="ChannelDefinition"/> to build
-    /// </summary>
-    /// <param name="type">The <see cref="OperationDefinition"/>'s type</param>
-    /// <param name="setup">An <see cref="Action{T}"/> used to setup the Subscribe <see cref="OperationDefinition"/></param>
-    /// <returns>The configured <see cref="IChannelDefinitionBuilder"/></returns>
-    IChannelDefinitionBuilder WithOperation(OperationType type, Action<IOperationDefinitionBuilder> setup);
-
-    /// <summary>
-    /// Defines and configures the Subscribe operation of the <see cref="ChannelDefinition"/> to build
-    /// </summary>
-    /// <param name="setup">An <see cref="Action{T}"/> used to setup the Subscribe <see cref="OperationDefinition"/></param>
-    /// <returns>The configured <see cref="IChannelDefinitionBuilder"/></returns>
-    IChannelDefinitionBuilder WithSubscribeOperation(Action<IOperationDefinitionBuilder> setup);
-
-    /// <summary>
-    /// Defines and configures the Publish operation of the <see cref="ChannelDefinition"/> to build
-    /// </summary>
-    /// <param name="setup">An <see cref="Action{T}"/> used to setup the Publish <see cref="OperationDefinition"/></param>
-    /// <returns>The configured <see cref="IChannelDefinitionBuilder"/></returns>
-    IChannelDefinitionBuilder WithPublishOperation(Action<IOperationDefinitionBuilder> setup);
-
-    /// <summary>
     /// Builds a new <see cref="ChannelDefinition"/>
     /// </summary>
     /// <returns>A new <see cref="ChannelDefinition"/></returns>

@@ -11,11 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Json.More;
 using Json.Schema;
 using Microsoft.Extensions.DependencyInjection;
 using Neuroglia.AsyncApi.CloudEvents;
 using Neuroglia.AsyncApi.FluentBuilders;
+using Neuroglia.AsyncApi.v3;
 using Neuroglia.AsyncApi.v3.Bindings.Http;
 using Neuroglia.Eventing.CloudEvents;
 using Neuroglia.Serialization.Json;
@@ -77,12 +77,12 @@ public class CloudEventExtensionsTests
         });
 
         //act
-        var document = this.Builder
+        var documentBuilder = this.Builder
            .WithServer("fake-server", server => server
                .WithBinding(new HttpServerBindingDefinition()))
            .WithChannel("fake-channel", channel => channel
-               .WithBinding(new HttpChannelBindingDefinition())
-               .WithPublishOperation(operation => operation
+               .WithBinding(new HttpChannelBindingDefinition()));
+        documentBuilder = documentBuilder.WithReceiveOperation(operation => operation
                    .WithCloudEventMessage(cloudEvent => cloudEvent
                        .WithSpecVersion(specVersion)
                        .WithSource(source)
@@ -90,19 +90,20 @@ public class CloudEventExtensionsTests
                        .WithSubject(subject)
                        .WithDataContentType(dataContentType)
                        .WithDataSchemaUri(dataSchemaUri)
-                       .WithDataOfType<FakeEvent>())))
-           .Build();
+                       .WithDataOfType<FakeEvent>()));
+        var document = documentBuilder.Build();
 
         //assert
         document.Should().NotBeNull();
         document.Channels.Should().ContainSingle();
 
-        var channel = document.Channels.Single();
-        channel.Value.Publish.Should().NotBeNull();
-        channel.Value.Publish!.Message.Should().NotBeNull();
-        channel.Value.Publish.Message!.Payload.Should().NotBeNull();
+        var operation = document.Operations.Single();
+        operation.Value.Should().NotBeNull();
+        operation.Value.Action.Should().Be(ActionType.Receive);
+        operation.Value.Message.Should().NotBeNull();
+        operation.Value.Message!.Payload.Should().NotBeNull();
 
-        var schema = channel.Value.Publish.Message.Payload as JsonSchema;
+        var schema = operation.Value.Message.Payload as JsonSchema;
         schema.Should().NotBeNull();
 
         var evaluationResults = schema!.Evaluate(validCloudEvent);

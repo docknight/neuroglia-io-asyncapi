@@ -27,10 +27,6 @@ public class ChannelValidator
     /// </summary>
     public ChannelValidator()
     {
-        this.RuleFor(c => c.Subscribe!)
-            .SetValidator(new OperationValidator());
-        this.RuleFor(c => c.Publish!)
-            .SetValidator(new OperationValidator());
     }
 
 }

@@ -76,16 +76,9 @@
         <div class="card border-0">
             <a data-bs-toggle="collapse" href="#operations" role="button" aria-expanded="false"><div class="card-header bg-transparent"><span class="card-title h3 text-secondary">Operations</span></div></a>
             <div id="operations" class="card-body p-0 collapse show">
-                @foreach (var channel in document.Channels)
+                @foreach (var operation in document.Operations)
                 {
-                    if (channel.Value.Publish != null)
-                    {
-                        <partial name="_Operation" model="new OperationDefinitionViewModel(document, channel.Key, OperationType.Publish, channel.Value.Publish)" />
-                    }
-                    if (channel.Value.Subscribe != null)
-                    {
-                        <partial name="_Operation" model="new OperationDefinitionViewModel(document, channel.Key, OperationType.Subscribe, channel.Value.Subscribe)" />
-                    }
+                    <partial name="_Operation" model="new OperationDefinitionViewModel(document, operation.Key, operation.Value.Action, operation.Value)" />
                 }
             </div>
         </div>

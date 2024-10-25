@@ -68,4 +68,10 @@ public class OperationDefinitionBuilder(IServiceProvider serviceProvider, IEnume
         return this;
     }
 
+    /// <inheritdoc/>
+    public virtual IOperationDefinitionBuilder WithActionType(ActionType type)
+    {
+        this.Trait.Action = type;
+        return this;
+    }
 }

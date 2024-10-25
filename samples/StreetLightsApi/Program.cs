@@ -65,8 +65,8 @@ builder.Services.AddAsyncApiDocument(document => document
         .WithSecurityRequirement("oauth2"))
     .WithChannel("/events", channel => channel
         .WithDescription("The endpoint used to publish and subscribe to cloud events")
-        .WithBinding(new HttpChannelBindingDefinition())
-        .WithSubscribeOperation(operation => operation
+        .WithBinding(new HttpChannelBindingDefinition()))
+    .WithReceiveOperation(operation => operation
             .WithOperationId("ObserveCloudEvents")
             .WithDescription("Observes cloud events published by the StreetLightsApi")
             .WithBinding(new HttpOperationBindingDefinition() { Method = Neuroglia.AsyncApi.v3.Bindings.Http.HttpMethod.POST, Type = HttpBindingOperationType.Response })
@@ -90,7 +90,7 @@ builder.Services.AddAsyncApiDocument(document => document
                     .WithCorrelationId("$message.payload#/subject")
                     .WithTag(tag => tag
                         .WithName("movement"))
-            )))
+            ))
     .WithMessageTraitComponent("cloud-event", message => message
         .WithBinding(new HttpMessageBindingDefinition())
         .WithContentType("application/cloudevents+json"))

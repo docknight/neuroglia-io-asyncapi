@@ -46,7 +46,7 @@ public class MovementSensorService(ILogger<MovementSensorService> logger, IJsonS
     }
 
     [Tag("movement", "A tag for movement-related operations"), Tag("sensor", "A tag for sensor-related operations")]
-    [Channel("movement/detected"), SubscribeOperation(OperationId = "OnMovementDetected", Summary = "Inform about movement captured by sensors")]
+    [Channel("movement/detected"), ReceiveOperation("movement/detected", OperationId = "OnMovementDetected", Summary = "Inform about movement captured by sensors")]
     protected Task OnMovementDetected(MovementDetectedEvent e)
     {
         this.Logger.LogInformation("Movement detected by sensor with id '{sensorId}' at {sentAt}", e.SensorId, e.SentAt);

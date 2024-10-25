@@ -11,8 +11,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v3;
-
 namespace Neuroglia.AsyncApi.FluentBuilders;
 
 /// <summary>
@@ -42,5 +40,12 @@ public interface IOperationDefinitionBuilder
     /// <param name="setups">An array containing the <see cref="Action{T}"/> used to setup the <see cref="MessageDefinition"/>s to use</param>
     /// <returns>The configured <see cref="IOperationDefinitionBuilder"/></returns>
     IOperationDefinitionBuilder WithMessages(params Action<IMessageDefinitionBuilder>[] setups);
+
+    /// <summary>
+    /// Sets the <see cref="OperationDefinition"/>'s <see cref="ActionType"/>
+    /// </summary>
+    /// <param name="type">The type of the operation.</param>
+    /// <returns>The configured <see cref="IOperationDefinitionBuilder"/></returns>
+    IOperationDefinitionBuilder WithActionType(ActionType type);
 
 }

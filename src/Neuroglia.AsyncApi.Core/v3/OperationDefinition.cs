@@ -24,13 +24,25 @@ public record OperationDefinition
     /// <summary>
     /// Gets/sets a <see cref="List{T}"/> of traits to apply to the operation object. Traits MUST be merged into the operation object using the JSON Merge Patch algorithm in the same order they are defined here.
     /// </summary>
-    [DataMember(Order = 1, Name = "traits"), JsonPropertyOrder(1), JsonPropertyName("traits"), YamlMember(Order = 1, Alias = "traits")]
+    [DataMember(Order = 1, Name = "action"), JsonPropertyOrder(1), JsonPropertyName("action"), YamlMember(Order = 1, Alias = "action")]
+    public virtual ActionType Action { get; set; }
+
+    /// <summary>
+    /// Gets/sets a <see cref="List{T}"/> of traits to apply to the operation object. Traits MUST be merged into the operation object using the JSON Merge Patch algorithm in the same order they are defined here.
+    /// </summary>
+    [DataMember(Order = 2, Name = "traits"), JsonPropertyOrder(2), JsonPropertyName("traits"), YamlMember(Order = 2, Alias = "traits")]
     public virtual EquatableList<OperationTraitDefinition>? Traits { get; set; }
 
     /// <summary>
     /// Gets/sets a definition of the message(s) that will be published or received on this channel.
     /// </summary>
-    [DataMember(Order = 2, Name = "message"), JsonPropertyOrder(2), JsonPropertyName("message"), YamlMember(Order = 2, Alias = "message")]
+    [DataMember(Order = 3, Name = "message"), JsonPropertyOrder(3), JsonPropertyName("message"), YamlMember(Order = 3, Alias = "message")]
     public virtual OperationMessageDefinition? Message { get; set; }
+
+    /// <summary>
+    /// Gets/sets a reference to the channel for this operation.
+    /// </summary>
+    [DataMember(Order = 4, Name = "channel"), JsonPropertyOrder(4), JsonPropertyName("channel"), YamlMember(Order = 4, Alias = "channel")]
+    public virtual ReferenceableComponentDefinition? Channel { get; set; }
 
 }

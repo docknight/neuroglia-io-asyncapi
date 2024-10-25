@@ -21,7 +21,7 @@ public record OperationDefinitionViewModel
 {
 
     /// <inheritdoc/>
-    public OperationDefinitionViewModel(AsyncApiDocument document, string channelKey, OperationType operationType, OperationDefinition operation) : base(document) { this.ChannelKey = channelKey; this.OperationType = operationType; this.Operation = operation; }
+    public OperationDefinitionViewModel(AsyncApiDocument document, string channelKey, ActionType actionType, OperationDefinition operation) : base(document) { this.ChannelKey = channelKey; this.ActionType = actionType; this.Operation = operation; }
 
     /// <summary>
     /// Gets the key of the <see cref="ChannelDefinition"/> the <see cref="OperationDefinition"/> to render belongs to
@@ -31,7 +31,7 @@ public record OperationDefinitionViewModel
     /// <summary>
     /// Gets the type of the <see cref="OperationDefinition"/> to render
     /// </summary>
-    public OperationType OperationType { get; }
+    public ActionType ActionType { get; }
 
     /// <summary>
     /// Gets the <see cref="OperationDefinition"/> to render

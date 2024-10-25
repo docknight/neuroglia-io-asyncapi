@@ -16,21 +16,23 @@ using Neuroglia.AsyncApi.v3;
 namespace Neuroglia.AsyncApi;
 
 /// <summary>
-/// Represents an <see cref="Attribute"/> used to mark a method as an <see cref="OperationDefinition"/> of type <see cref="OperationType.Subscribe"/>
+/// Represents an <see cref="Attribute"/> used to mark a method as an <see cref="OperationDefinition"/> of type <see cref="ActionType.Receive"/>
 /// </summary>
-public class SubscribeOperationAttribute
+public class ReceiveOperationAttribute
     : OperationAttribute
 {
-    
-    /// <summary>
-    /// Initializes a new <see cref="SubscribeOperationAttribute"/>
-    /// </summary>
-    /// <param name="messageType">The <see cref="OperationDefinition"/>'s message type</param>
-    public SubscribeOperationAttribute(Type messageType) : base(OperationType.Subscribe, messageType) { }
 
     /// <summary>
-    /// Initializes a new <see cref="OperationAttribute"/>
+    /// Initializes a new <see cref="ReceiveOperationAttribute"/>
     /// </summary>
-    public SubscribeOperationAttribute() : base(OperationType.Subscribe) { }
+    /// <param name="messageType">The <see cref="OperationDefinition"/>'s message type</param>
+    /// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
+    public ReceiveOperationAttribute(Type messageType, string channelName) : base(ActionType.Receive, messageType, channelName) { }
+
+    /// <summary>
+    /// Initializes a new <see cref="ReceiveOperationAttribute"/>
+    /// </summary>
+    /// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
+    public ReceiveOperationAttribute(string channelName) : base(ActionType.Receive, channelName) { }
 
 }

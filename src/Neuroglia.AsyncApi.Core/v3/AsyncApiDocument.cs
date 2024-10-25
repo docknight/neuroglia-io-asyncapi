@@ -67,9 +67,16 @@ public record AsyncApiDocument
     public virtual EquatableDictionary<string, ChannelDefinition> Channels { get; set; } = null!;
 
     /// <summary>
+    /// Gets/sets a collection containing the available operations for the API.
+    /// </summary>
+    [Required, MinLength(1)]
+    [DataMember(Order = 7, Name = "operations"), JsonPropertyOrder(7), JsonPropertyName("operations"), YamlMember(Order = 7, Alias = "operations")]
+    public virtual EquatableDictionary<string, OperationDefinition> Operations { get; set; } = null!;
+
+    /// <summary>
     /// Gets/sets an object used to hold various schemas for the specification.
     /// </summary>
-    [DataMember(Order = 7, Name = "components"), JsonPropertyOrder(7), JsonPropertyName("components"), YamlMember(Order = 7, Alias = "components")]
+    [DataMember(Order = 8, Name = "components"), JsonPropertyOrder(8), JsonPropertyName("components"), YamlMember(Order = 8, Alias = "components")]
     public virtual ComponentDefinitionCollection? Components { get; set; }
 
     /// <summary>
@@ -82,12 +89,8 @@ public record AsyncApiDocument
     public virtual bool TryGetOperation(string operationId, out OperationDefinition? operation, out string? channelName)
     {
         if (string.IsNullOrWhiteSpace(operationId)) throw new ArgumentNullException(nameof(operationId));
-        operation = null;
-        channelName = null;
-        var channel = Channels?.FirstOrDefault(c => c.Value.DefinesOperationWithId(operationId));
-        if (!channel.HasValue || channel.Value.Equals(default(KeyValuePair<string, ChannelDefinition>))) return false;
-        operation = channel.Value.Value.GetOperationById(operationId);
-        channelName = channel.Value.Key;
+        operation = Operations?.FirstOrDefault(o => o.Value.OperationId == operationId).Value;
+        channelName = operation?.Channel?.Reference;
         return true;
     }
 
@@ -102,6 +105,17 @@ public record AsyncApiDocument
         if (string.IsNullOrWhiteSpace(operationId))
             throw new ArgumentNullException(nameof(operationId));
         return TryGetOperation(operationId, out operation, out _);
+    }
+
+    /// <summary>
+    /// Determines whether or not the <see cref="ChannelDefinition"/> defines an <see cref="OperationDefinition"/> with the specified id
+    /// </summary>
+    /// <param name="operationId">The id of the operation to check</param>
+    /// <returns>A boolean indicating whether or not the <see cref="ChannelDefinition"/> defines an <see cref="OperationDefinition"/> with the specified id</returns>
+    public virtual bool DefinesOperationWithId(string operationId)
+    {
+        if (string.IsNullOrWhiteSpace(operationId)) throw new ArgumentNullException(nameof(operationId));
+        return Operations != null && Operations.Any(o => o.Value.OperationId == operationId);
     }
 
     /// <inheritdoc/>

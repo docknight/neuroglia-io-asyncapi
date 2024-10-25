@@ -120,6 +120,28 @@ public interface IAsyncApiDocumentBuilder
     IAsyncApiDocumentBuilder WithChannel(string name, Action<IChannelDefinitionBuilder> setup);
 
     /// <summary>
+    /// Adds the specified <see cref="OperationDefinition"/> to the <see cref="AsyncApiDocument"/> to build.
+    /// </summary>
+    /// <param name="type">Operation type.</param>
+    /// <param name="setup">An <see cref="Action{T}"/> used to setup the <see cref="OperationDefinition"/> to add</param>
+    /// <returns>The configured <see cref="IAsyncApiDocumentBuilder"/></returns>
+    IAsyncApiDocumentBuilder WithOperation(ActionType type, Action<IOperationDefinitionBuilder> setup);
+
+    /// <summary>
+    /// Adds the specified send <see cref="OperationDefinition"/> to the <see cref="AsyncApiDocument"/> to build.
+    /// </summary>
+    /// <param name="setup">An <see cref="Action{T}"/> used to setup the <see cref="OperationDefinition"/> to add</param>
+    /// <returns>The configured <see cref="IAsyncApiDocumentBuilder"/></returns>
+    IAsyncApiDocumentBuilder WithSendOperation(Action<IOperationDefinitionBuilder> setup);
+
+    /// <summary>
+    /// Adds the specified receive <see cref="OperationDefinition"/> to the <see cref="AsyncApiDocument"/> to build.
+    /// </summary>
+    /// <param name="setup">An <see cref="Action{T}"/> used to setup the <see cref="OperationDefinition"/> to add</param>
+    /// <returns>The configured <see cref="IAsyncApiDocumentBuilder"/></returns>
+    IAsyncApiDocumentBuilder WithReceiveOperation(Action<IOperationDefinitionBuilder> setup);
+
+    /// <summary>
     /// Adds the specified <see cref="SecuritySchemeDefinition"/>
     /// </summary>
     /// <param name="name">The name of the <see cref="SecuritySchemeDefinition"/> to add</param>

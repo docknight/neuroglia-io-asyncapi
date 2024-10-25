@@ -17,7 +17,7 @@ namespace Neuroglia.AsyncApi.v3;
 /// Represents the base record for all <see cref="IReferenceable"/> Async API components
 /// </summary>
 [DataContract]
-public abstract record ReferenceableComponentDefinition
+public record ReferenceableComponentDefinition
     : IReferenceable
 {
 

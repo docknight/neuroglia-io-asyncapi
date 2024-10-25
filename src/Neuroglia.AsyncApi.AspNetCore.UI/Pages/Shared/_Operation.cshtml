@@ -1,16 +1,16 @@
 ﻿@inject Neuroglia.Serialization.IJsonSerializer Serializer
 @model OperationDefinitionViewModel
 @{
-    var operationType = this.Model.OperationType;
+    var actionType = this.Model.ActionType;
     var operation = this.Model.Operation;
     var message = operation.Message;
     var jsonPayload = message?.Payload == null ? null : this.Serializer.SerializeToText(message?.Payload);
     var schema = string.IsNullOrWhiteSpace(jsonPayload) ? null : JsonSchema.FromText(jsonPayload);
-    var operationRef = $"{operation.OperationId!.ToLowerInvariant()}-{EnumHelper.Stringify(operationType).ToLowerInvariant()}";
+    var operationRef = $"{operation.OperationId!.ToLowerInvariant()}-{EnumHelper.Stringify(actionType).ToLowerInvariant()}";
 
-    var badgeColor = operationType == OperationType.Publish ? "info" : "info";
-    var badgeTooltip = operationType == OperationType.Publish ? "An operation used to publish a message to the specified channel." : "An operation used to subscribe to messages from the specified channel.";
-    var badgeText = operationType == OperationType.Publish ? "PUB" : "SUB";
+    var badgeColor = actionType == ActionType.Receive ? "info" : "info";
+    var badgeTooltip = actionType == ActionType.Send ? "An operation used to publish a message to the specified channel." : "An operation used to subscribe to messages from the specified channel.";
+    var badgeText = Enum.GetName(typeof(ActionType), actionType).ToUpper();
 }
 
 <div class="m-3">

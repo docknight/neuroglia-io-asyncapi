@@ -37,6 +37,11 @@ public class AsyncApiDocumentValidator
         this.RuleForEach(d => d.Channels.Values)
             .SetValidator(new ChannelValidator())
             .When(d => d.Channels != null);
+        this.RuleFor(d => d.Operations)
+            .NotEmpty();
+        this.RuleForEach(d => d.Operations.Values)
+            .SetValidator(new OperationValidator())
+            .When(d => d.Channels != null);
         this.RuleFor(d => d.Components!)
             .SetValidator(new ComponentsValidator());
         this.RuleForEach(d => d.Servers!.Values)

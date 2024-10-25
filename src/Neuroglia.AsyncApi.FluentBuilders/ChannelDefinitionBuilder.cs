@@ -72,32 +72,6 @@ public class ChannelDefinitionBuilder(IServiceProvider serviceProvider, IEnumera
     }
 
     /// <inheritdoc/>
-    public virtual IChannelDefinitionBuilder WithOperation(OperationType type, Action<IOperationDefinitionBuilder> setup)
-    {
-        ArgumentNullException.ThrowIfNull(setup);
-        var builder = ActivatorUtilities.CreateInstance<OperationDefinitionBuilder>(this.ServiceProvider);
-        setup(builder);
-        switch (type)
-        {
-            case OperationType.Publish:
-                this.Channel.Publish = builder.Build();
-                break;
-            case OperationType.Subscribe:
-                this.Channel.Subscribe = builder.Build();
-                break;
-            default:
-                throw new NotSupportedException($"The specified operation type '{type}' is not supported");
-        }
-        return this;
-    }
-
-    /// <inheritdoc/>
-    public virtual IChannelDefinitionBuilder WithSubscribeOperation(Action<IOperationDefinitionBuilder> setup) => this.WithOperation(OperationType.Subscribe, setup);
-
-    /// <inheritdoc/>
-    public virtual IChannelDefinitionBuilder WithPublishOperation(Action<IOperationDefinitionBuilder> setup) => this.WithOperation(OperationType.Publish, setup);
-
-    /// <inheritdoc/>
     public virtual ChannelDefinition Build()
     {
         var validationResults = this.Validators.Select(v => v.Validate(this.Channel));

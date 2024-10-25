@@ -105,49 +105,59 @@ internal static class AsyncApiDocumentFactory
                     "fake-channel",
                     new ChannelDefinition()
                     {
-                        Publish = new()
-                        {
-                            OperationId = "fake-operation-id",
-                            Description = "Fake Operation Description",
-                            Summary = "Fake Operation Summary",
-                            Bindings = new()
-                            {
-                                //todo
-                            },
-                            Message = new()
-                            {
-                                //todo
-                            },
-                            Traits = [],
-                            ExternalDocs = new()
-                            {
-                                Url = new("https://fake.contact.com"),
-                                Description = "Fake Documentation Description"
-                            },
-                            Tags =
-                            [
-                                new TagDefinition()
-                                {
-                                    Name = "fake-tag",
-                                    Description = "Fake Tag Description",
-                                    ExternalDocs = new()
-                                    {
-                                        Url = new("https://fake.contact.com"),
-                                        Description = "Fake Documentation Description"
-                                    }
-                                }
-                            ]
-                        },
-                        Subscribe = new()
-                        {
-
-                        },
                         Description = "Fake Channel Description",
                         Bindings = new()
                         {
                             //todo
                         },
                         Parameters = []
+                    }
+                }
+            },
+            Operations = new()
+            {
+                {
+                    "Publish",
+                    new()
+                    {
+                        Action = ActionType.Receive,
+                        OperationId = "fake-operation-id",
+                        Description = "Fake Operation Description",
+                        Summary = "Fake Operation Summary",
+                        Bindings = new()
+                        {
+                            //todo
+                        },
+                        Message = new()
+                        {
+                            //todo
+                        },
+                        Traits = [],
+                        ExternalDocs = new()
+                        {
+                            Url = new("https://fake.contact.com"),
+                            Description = "Fake Documentation Description"
+                        },
+                        Tags =
+                                [
+                                    new TagDefinition()
+                                    {
+                                        Name = "fake-tag",
+                                        Description = "Fake Tag Description",
+                                        ExternalDocs = new()
+                                        {
+                                            Url = new("https://fake.contact.com"),
+                                            Description = "Fake Documentation Description"
+                                        }
+                                    }
+                                ]
+                    }
+                },
+                {
+                    "Subscribe",
+                    new()
+                    {
+                        Action = ActionType.Send,
                     }
                 }
             },

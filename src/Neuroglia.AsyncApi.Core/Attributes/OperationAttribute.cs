@@ -21,28 +21,35 @@ namespace Neuroglia.AsyncApi;
 /// <remarks>
 /// Initializes a new <see cref="OperationAttribute"/>
 /// </remarks>
-/// <param name="operationType">The <see cref="OperationDefinition"/>'s type</param>
+/// <param name="actionType">The <see cref="OperationDefinition"/>'s type</param>
 /// <param name="messageType">The <see cref="OperationDefinition"/>'s message type</param>
+/// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public abstract class OperationAttribute(OperationType operationType, Type? messageType)
+public abstract class OperationAttribute(ActionType actionType, Type? messageType, string channelName)
     : Attribute
 {
 
     /// <summary>
     /// Initializes a new <see cref="OperationAttribute"/>
     /// </summary>
-    /// <param name="operationType">The <see cref="OperationDefinition"/>'s type</param>
-    protected OperationAttribute(OperationType operationType) : this(operationType, null) { }
+    /// <param name="actionType">The <see cref="OperationDefinition"/>'s type</param>
+    /// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
+    protected OperationAttribute(ActionType actionType, string channelName) : this(actionType, null, channelName) { }
 
     /// <summary>
     /// Gets the <see cref="OperationDefinition"/>'s type
     /// </summary>
-    public virtual OperationType OperationType { get; } = operationType;
+    public virtual ActionType ActionType => actionType;
 
     /// <summary>
     /// Gets the <see cref="OperationDefinition"/>'s message type
     /// </summary>
-    public virtual Type? MessageType { get; } = messageType;
+    public virtual Type? MessageType => messageType;
+
+    /// <summary>
+    /// Gets the <see cref="OperationDefinition"/>'s channel name.
+    /// </summary>
+    public virtual string ChannelName => channelName;
 
     /// <summary>
     /// Gets/sets the <see cref="OperationDefinition"/>'s operation id

@@ -48,7 +48,7 @@ public class TemperatureSensorServiceV1(ILogger<TemperatureSensorServiceV1> logg
     }
 
     [Tag("temperature", "A tag for temeprature-related operations"), Tag("sensor", "A tag for sensor-related operations")]
-    [Channel("temperature/changed"), SubscribeOperation(OperationId = "OnTemperatureChanged", Summary = "Inform about temperature changes captured by sensors")]
+    [Channel("temperature/changed"), ReceiveOperation("temperature/changed", OperationId = "OnTemperatureChanged", Summary = "Inform about temperature changes captured by sensors")]
     protected Task OnTemperatureChanged([Range(-100, 100)]decimal degrees)
     {
         this.Logger.LogInformation("Temperature is {degrees}° Celsius", degrees);

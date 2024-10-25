@@ -11,26 +11,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v3;
+using Neuroglia.Serialization.Json.Converters;
+using System.ComponentModel;
 
-namespace Neuroglia.AsyncApi;
+namespace Neuroglia.AsyncApi.v3;
 
 /// <summary>
-/// Represents an <see cref="Attribute"/> used to mark a method as an <see cref="OperationDefinition"/> of type <see cref="OperationType.Publish"/>
+/// Enumerates all Async API operation types
 /// </summary>
-public class PublishOperationAttribute
-    : OperationAttribute
+[JsonConverter(typeof(StringEnumConverter))]
+[TypeConverter(typeof(EnumMemberTypeConverter))]
+public enum ActionType
 {
+    /// <summary>
+    /// Indicates the application is sending a message.
+    /// </summary>
+    [EnumMember(Value = "send")]
+    Send = 1,
 
     /// <summary>
-    /// Initializes a new <see cref="PublishOperationAttribute"/>
+    /// Indicates the application is receiving a message.
     /// </summary>
-    /// <param name="messageType">The <see cref="OperationDefinition"/>'s message type</param>
-    public PublishOperationAttribute(Type messageType) : base(OperationType.Publish, messageType) { }
-
-    /// <summary>
-    /// Initializes a new <see cref="PublishOperationAttribute"/>
-    /// </summary>
-    public PublishOperationAttribute() : base(OperationType.Publish) { }
-
+    [EnumMember(Value = "receive")]
+    Receive = 2
 }

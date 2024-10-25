@@ -47,7 +47,7 @@ public class StreetLightsService(ILogger<StreetLightsService> logger, IJsonSeria
     }
 
     [Tag("light", "A tag for light-related operations"), Tag("measurement", "A tag for measurement-related operations")]
-    [Channel("light/measured"), PublishOperation(OperationId = "NotifyLightMeasured", Summary = "Notifies remote consumers about environmental lighting conditions for a particular streetlight")]
+    [Channel("light/measured"), SendOperation("light/measured", OperationId = "NotifyLightMeasured", Summary = "Notifies remote consumers about environmental lighting conditions for a particular streetlight")]
     public async Task PublishLightMeasured(LightMeasuredEvent e, CancellationToken cancellationToken = default)
     {
         var message = new MqttApplicationMessage()
@@ -60,7 +60,7 @@ public class StreetLightsService(ILogger<StreetLightsService> logger, IJsonSeria
     }
 
     [Tag("light", "A tag for light-related operations"), Tag("measurement", "A tag for measurement-related operations")]
-    [Channel("light/measured"), SubscribeOperation(OperationId = "OnLightMeasured", Summary = "Inform about environmental lighting conditions for a particular streetlight")]
+    [Channel("light/measured"), ReceiveOperation("light/measured", OperationId = "OnLightMeasured", Summary = "Inform about environmental lighting conditions for a particular streetlight")]
     protected Task OnLightMeasured(LightMeasuredEvent e)
     {
         this.Logger.LogInformation("Event received:\r\n{json}", this.Serializer.SerializeToText(e));

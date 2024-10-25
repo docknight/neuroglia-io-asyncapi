@@ -71,12 +71,12 @@ public class FluentBuilderTests
         var channelParameterLocation = "/MQMD/CorrelId";
         var channelParameterDescription = "Fake Channel Param Description";
         var channelParameterSchema = new JsonSchemaBuilder().FromType<LicenseDefinition>();
-        var publishOperationId = "fake-publish-operation";
-        var publishOperationDescription = "Fake Publish Operation Description";
-        var publishOperationSummary = "Fake Publish Operation Summary";
-        var subscribeOperationId = "fake-subscribe-operation";
-        var subscribeOperationDescription = "Fake Subscribe Operation Description";
-        var subscribeOperationSummary = "Fake Subscribe Operation Summary";
+        var receiveOperationId = "fake-receive-operation";
+        var receiveOperationDescription = "Fake Receive Operation Description";
+        var receiveOperationSummary = "Fake Receive Operation Summary";
+        var sendOperationId = "fake-send-operation";
+        var sendOperationDescription = "Fake Send Operation Description";
+        var sendOperationSummary = "Fake Send Operation Summary";
 
         //act
         var document = this.Builder
@@ -104,24 +104,24 @@ public class FluentBuilderTests
                 .WithParameter(channelParameterName, parameter => parameter
                     .WithLocation(channelParameterLocation)
                     .WithDescription(channelParameterDescription)
-                    .WithSchema(channelParameterSchema))
-                .WithPublishOperation(publish => publish
-                    .WithOperationId(publishOperationId)
-                    .WithDescription(publishOperationDescription)
-                    .WithSummary(publishOperationSummary)
-                    .WithBinding(new HttpOperationBindingDefinition())
-                    .WithMessage(message => message
-                        .WithPayloadOfType<LicenseDefinition>()))
-                .WithSubscribeOperation(subscribe => subscribe
-                    .WithOperationId(subscribeOperationId)
-                    .WithDescription(subscribeOperationDescription)
-                    .WithSummary(subscribeOperationSummary)
-                    .WithBinding(new HttpOperationBindingDefinition())
-                    .WithMessages
-                    (
-                        message1 => message1.WithPayloadOfType<LicenseDefinition>(),
-                        message2 => message2.WithPayloadOfType<ContactDefinition>()
-                    )))
+                    .WithSchema(channelParameterSchema)))
+            .WithReceiveOperation(publish => publish
+                .WithOperationId(receiveOperationId)
+                .WithDescription(receiveOperationDescription)
+                .WithSummary(receiveOperationSummary)
+                .WithBinding(new HttpOperationBindingDefinition())
+                .WithMessage(message => message
+                    .WithPayloadOfType<LicenseDefinition>()))
+            .WithSendOperation(subscribe => subscribe
+                .WithOperationId(sendOperationId)
+                .WithDescription(sendOperationDescription)
+                .WithSummary(sendOperationSummary)
+                .WithBinding(new HttpOperationBindingDefinition())
+                .WithMessages
+                (
+                    message1 => message1.WithPayloadOfType<LicenseDefinition>(),
+                    message2 => message2.WithPayloadOfType<ContactDefinition>()
+                ))
             .WithTag(tag => tag
                 .WithName(tagName)
                 .WithDescription(tagDescription)
@@ -167,18 +167,19 @@ public class FluentBuilderTests
         var channel = document.Channels!.SingleOrDefault();
         channel.Should().NotBeNull();
         channel.Key.Should().Be(channelName);
-        channel.Value.Publish.Should().NotBeNull();
-        channel.Value.Publish!.OperationId.Should().Be(publishOperationId);
-        channel.Value.Publish.Description.Should().Be(publishOperationDescription);
-        channel.Value.Publish.Summary.Should().Be(publishOperationSummary);
-        channel.Value.Publish.Message.Should().NotBeNull();
-        channel.Value.DefinesPublishOperation.Should().BeTrue();
-        channel.Value.Subscribe!.OperationId.Should().Be(subscribeOperationId);
-        channel.Value.Subscribe.Description.Should().Be(subscribeOperationDescription);
-        channel.Value.Subscribe.Summary.Should().Be(subscribeOperationSummary);
-        channel.Value.Subscribe.Message.Should().NotBeNull();
-        channel.Value.Subscribe.Message!.OneOf.Should().HaveCountGreaterThan(1);
-        channel.Value.DefinesSubscribeOperation.Should().BeTrue();
+        var operations = document.Operations.Values;
+        operations.Should().HaveCount(2);
+        var receiveOperation = operations.SingleOrDefault(o => o.OperationId == receiveOperationId);
+        receiveOperation.Should().NotBeNull();
+        receiveOperation!.Description.Should().Be(receiveOperationDescription);
+        receiveOperation.Summary.Should().Be(receiveOperationSummary);
+        receiveOperation.Message.Should().NotBeNull();
+        var sendOperation = operations.SingleOrDefault(o => o.OperationId == sendOperationId);
+        sendOperation.Should().NotBeNull();
+        sendOperation!.Description.Should().Be(sendOperationDescription);
+        sendOperation.Summary.Should().Be(sendOperationSummary);
+        sendOperation.Message.Should().NotBeNull();
+        sendOperation.Message!.OneOf.Should().HaveCountGreaterThan(1);
         channel.Value.Bindings.Should().NotBeNull();
         channel.Value.Bindings!.Http.Should().NotBeNull();
 
