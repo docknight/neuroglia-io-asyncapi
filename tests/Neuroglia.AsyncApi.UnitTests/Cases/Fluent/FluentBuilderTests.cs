@@ -15,8 +15,8 @@ using Json.Schema;
 using Json.Schema.Generation;
 using Microsoft.Extensions.DependencyInjection;
 using Neuroglia.AsyncApi.FluentBuilders;
-using Neuroglia.AsyncApi.v2.Bindings.Http;
-using Neuroglia.AsyncApi.v2;
+using Neuroglia.AsyncApi.v3.Bindings.Http;
+using Neuroglia.AsyncApi.v3;
 using System.Net.Mime;
 
 namespace Neuroglia.AsyncApi.UnitTests.Cases.Fluent;
@@ -59,6 +59,7 @@ public class FluentBuilderTests
         var serverName = "fake-server";
         var serverUrl = new Uri("https://fake-uri.com");
         var serverProtocol = AsyncApiProtocol.Http;
+        var serverHost = "fake-uri.com";
         var serverDescription = "fake-server-description";
         var serverVariableName = "fake-server-variable";
         var serverVariableDefaultValue = "fake-server-variable-default";
@@ -89,7 +90,7 @@ public class FluentBuilderTests
             .WithTermsOfService(termsOfServiceUri)
             .WithDefaultContentType(defaultContentType)
             .WithServer(serverName, server => server
-                .WithUrl(serverUrl)
+                .WithHost(serverHost)
                 .WithProtocol(serverProtocol, "2")
                 .WithDescription(serverDescription)
                 .WithVariable(serverVariableName, variable => variable
@@ -142,15 +143,15 @@ public class FluentBuilderTests
         document.Info.License!.Name.Should().Be(licenseName);
         document.Info.License.Url.Should().Be(licenseUri);
         document.Info.TermsOfService.Should().Be(termsOfServiceUri);
+        document.Info.ExternalDocs.Should().NotBeNull();
+        document.Info.ExternalDocs!.Description.Should().Be(tagDocumentationDescription);
+        document.Info.ExternalDocs.Url.Should().Be(tagDocumentationUri);
         document.DefaultContentType.Should().Be(defaultContentType);
-        document.ExternalDocs.Should().NotBeNull();
-        document.ExternalDocs!.Description.Should().Be(tagDocumentationDescription);
-        document.ExternalDocs.Url.Should().Be(tagDocumentationUri);
 
         var server = document.Servers!.SingleOrDefault();
         server.Should().NotBeNull();
         server.Key.Should().Be(serverName);
-        server.Value.Url.Should().Be(serverUrl);
+        server.Value.Host.Should().Be(serverHost);
         server.Value.Protocol.Should().Be(serverProtocol);
         server.Value.Description.Should().Be(serverDescription);
         server.Value.Bindings.Should().NotBeNull();
@@ -188,7 +189,7 @@ public class FluentBuilderTests
         parameter.Value.Description.Should().Be(channelParameterDescription);
         parameter.Value.Schema.Should().NotBeNull();
 
-        var tag = document.Tags!.SingleOrDefault();
+        var tag = document.Info.Tags!.SingleOrDefault();
         tag.Should().NotBeNull();
         tag!.Name.Should().Be(tagName);
         tag.Description.Should().Be(tagDescription);

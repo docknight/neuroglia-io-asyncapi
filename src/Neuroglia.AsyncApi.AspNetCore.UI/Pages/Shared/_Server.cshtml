@@ -9,7 +9,7 @@
             <div class="card-header bg-transparent">
                 <span class="badge bg-info me-2" title="The server's protocol and protocol version">@($"{server.Protocol}{(string.IsNullOrWhiteSpace(server.ProtocolVersion) || server.ProtocolVersion == "latest" ? string.Empty : " " + server.ProtocolVersion)}".ToUpperInvariant())</span>
                 <span class="h5 text-secondary">@this.Model.Key</span>
-                <small class="font-italic text-muted ms-1"> [@server.Url]</small>
+                <small class="font-italic text-muted ms-1"> [@server.ToString()]</small>
                 @if(server.Security != null && server.Security.Any())
                 {
                     <i class="bi bi-lock-full text-secondary ms-2" role="button" title="The server has security requirements"></i>

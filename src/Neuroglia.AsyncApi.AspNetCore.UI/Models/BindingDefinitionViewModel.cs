@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v2.Bindings;
+using Neuroglia.AsyncApi.v3.Bindings;
 
 namespace Neuroglia.AsyncApi.AspNetCore.UI.Models;
 

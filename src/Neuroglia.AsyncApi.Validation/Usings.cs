@@ -12,4 +12,4 @@
 // limitations under the License.
 
 global using FluentValidation;
-global using Neuroglia.AsyncApi.v2;
+global using Neuroglia.AsyncApi.v3;

@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v2;
-using Neuroglia.AsyncApi.v2.Bindings;
+using Neuroglia.AsyncApi.v3;
+using Neuroglia.AsyncApi.v3.Bindings;
 
 namespace Neuroglia.AsyncApi.FluentBuilders;
 
@@ -44,9 +44,16 @@ public class ServerDefinitionBuilder(IServiceProvider serviceProvider, IEnumerab
     protected virtual ServerDefinition Server { get; } = new();
 
     /// <inheritdoc/>
-    public virtual IServerDefinitionBuilder WithUrl(Uri uri)
+    public virtual IServerDefinitionBuilder WithHost(string host)
     {
-        this.Server.Url = uri ?? throw new ArgumentNullException(nameof(uri));
+        this.Server.Host = host ?? throw new ArgumentNullException(nameof(host));
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public virtual IServerDefinitionBuilder WithPathname(string pathname)
+    {
+        this.Server.Pathname = pathname ?? throw new ArgumentNullException(nameof(pathname));
         return this;
     }
 

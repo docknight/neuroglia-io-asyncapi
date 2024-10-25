@@ -18,7 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Neuroglia.AsyncApi.FluentBuilders;
 using Neuroglia.AsyncApi.Generation;
 using Neuroglia.AsyncApi.IO;
-using Neuroglia.AsyncApi.v2;
+using Neuroglia.AsyncApi.v3;
 using Neuroglia.AsyncApi.Validation;
 using Neuroglia.Serialization;
 

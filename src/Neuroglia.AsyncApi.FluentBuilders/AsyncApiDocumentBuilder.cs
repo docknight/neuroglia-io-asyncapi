@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v2;
-using Neuroglia.AsyncApi.v2.Bindings;
+using Neuroglia.AsyncApi.v3;
+using Neuroglia.AsyncApi.v3.Bindings;
 
 namespace Neuroglia.AsyncApi.FluentBuilders;
 
@@ -121,10 +121,11 @@ public class AsyncApiDocumentBuilder(IServiceProvider serviceProvider, IEnumerab
     public virtual IAsyncApiDocumentBuilder WithTag(Action<ITagDefinitionBuilder> setup)
     {
         ArgumentNullException.ThrowIfNull(setup);
-        this.Document.Tags ??= [];
+        if (this.Document.Info == null) this.Document.Info = new();
+        this.Document.Info.Tags ??= [];
         var builder = ActivatorUtilities.CreateInstance<TagDefinitionBuilder>(this.ServiceProvider);
         setup(builder);
-        this.Document.Tags.Add(builder.Build());
+        this.Document.Info.Tags.Add(builder.Build());
         return this;
     }
 
@@ -132,7 +133,8 @@ public class AsyncApiDocumentBuilder(IServiceProvider serviceProvider, IEnumerab
     public virtual IAsyncApiDocumentBuilder WithExternalDocumentation(Uri uri, string? description = null)
     {
         ArgumentNullException.ThrowIfNull(uri);
-        this.Document.ExternalDocs = new() { Url = uri, Description = description };
+        if (this.Document.Info == null) this.Document.Info = new();
+        this.Document.Info.ExternalDocs = new() { Url = uri, Description = description };
         return this;
     }
 

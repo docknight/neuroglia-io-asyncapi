@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v2;
-using Neuroglia.AsyncApi.v2.Bindings;
+using Neuroglia.AsyncApi.v3;
+using Neuroglia.AsyncApi.v3.Bindings;
 
 namespace Neuroglia.AsyncApi.FluentBuilders;
 
@@ -23,11 +23,18 @@ public interface IServerDefinitionBuilder
 {
 
     /// <summary>
-    /// Configures the <see cref="ServerDefinition"/> to use the specified url
+    /// Configures the <see cref="ServerDefinition"/> to use the specified host name.
     /// </summary>
-    /// <param name="uri">The <see cref="Uri"/> of the <see cref="ServerDefinition"/> to build</param>
+    /// <param name="host">The host name of the <see cref="ServerDefinition"/> to build.</param>
     /// <returns>The configured <see cref="IServerDefinitionBuilder"/></returns>
-    IServerDefinitionBuilder WithUrl(Uri uri);
+    IServerDefinitionBuilder WithHost(string host);
+
+    /// <summary>
+    /// Configures the <see cref="ServerDefinition"/> to use the specified path on the host.
+    /// </summary>
+    /// <param name="pathname">The host path of the <see cref="ServerDefinition"/> to build.</param>
+    /// <returns>The configured <see cref="IServerDefinitionBuilder"/></returns>
+    IServerDefinitionBuilder WithPathname(string pathname);
 
     /// <summary>
     /// Configures the <see cref="ServerDefinition"/> to use the specified protocol

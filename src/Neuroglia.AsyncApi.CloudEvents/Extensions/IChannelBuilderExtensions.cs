@@ -12,7 +12,7 @@
 // limitations under the License.
 
 using Neuroglia.AsyncApi.FluentBuilders;
-using Neuroglia.AsyncApi.v2;
+using Neuroglia.AsyncApi.v3;
 
 namespace Neuroglia.AsyncApi.CloudEvents;
 

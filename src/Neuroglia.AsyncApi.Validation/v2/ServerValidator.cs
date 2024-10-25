@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v2;
+using Neuroglia.AsyncApi.v3;
 
 namespace Neuroglia.AsyncApi.Validation;
 
@@ -27,7 +27,7 @@ public class ServerValidator
     /// </summary>
     public ServerValidator()
     {
-        this.RuleFor(s => s.Url)
+        this.RuleFor(s => s.Host)
             .NotNull();
         this.RuleFor(s => s.Protocol)
             .NotEmpty();

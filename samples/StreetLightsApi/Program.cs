@@ -13,9 +13,9 @@
 
 using Json.Schema;
 using Neuroglia.AsyncApi;
-using Neuroglia.AsyncApi.v2;
-using Neuroglia.AsyncApi.v2.Bindings.Http;
-using Neuroglia.AsyncApi.v2.Bindings.Mqtt;
+using Neuroglia.AsyncApi.v3;
+using Neuroglia.AsyncApi.v3.Bindings.Http;
+using Neuroglia.AsyncApi.v3.Bindings.Mqtt;
 using Neuroglia.Data.Schemas.Json;
 using StreetLightsApi.Server.Services;
 using System.Net.Mime;
@@ -46,7 +46,7 @@ builder.Services.AddAsyncApiGeneration(builder =>
             asyncApi
                 .WithTermsOfService(new Uri("https://www.websitepolicies.com/blog/sample-terms-service-template"))
                 .WithServer("mosquitto", server => server
-                    .WithUrl(new Uri("mqtt://test.mosquitto.org"))
+                    .WithHost("test.mosquitto.org")
                     .WithProtocol(AsyncApiProtocol.Mqtt)
                     .WithDescription("The Mosquitto test MQTT server")
                     .WithBinding(new MqttServerBindingDefinition()
@@ -59,8 +59,8 @@ builder.Services.AddAsyncApiDocument(document => document
     .WithTitle("Cloud Event API")
     .WithVersion("1.0.0")
     .WithServer("StreetLightsApi", server => server
-        .WithUrl(new("https://streetlights.fake.com"))
-        .WithProtocol(AsyncApiProtocol.Http, "2.0")
+        .WithHost("streetlights.fake.com")
+        .WithProtocol(AsyncApiProtocol.Https, "2.0")
         .WithBinding(new HttpServerBindingDefinition())
         .WithSecurityRequirement("oauth2"))
     .WithChannel("/events", channel => channel
@@ -69,7 +69,7 @@ builder.Services.AddAsyncApiDocument(document => document
         .WithSubscribeOperation(operation => operation
             .WithOperationId("ObserveCloudEvents")
             .WithDescription("Observes cloud events published by the StreetLightsApi")
-            .WithBinding(new HttpOperationBindingDefinition() { Method = Neuroglia.AsyncApi.v2.Bindings.Http.HttpMethod.POST, Type = HttpBindingOperationType.Response })
+            .WithBinding(new HttpOperationBindingDefinition() { Method = Neuroglia.AsyncApi.v3.Bindings.Http.HttpMethod.POST, Type = HttpBindingOperationType.Response })
             .WithMessages
             (
                 message => message

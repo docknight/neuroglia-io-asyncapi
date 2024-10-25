@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v2;
+using Neuroglia.AsyncApi.v3;
 
 namespace Neuroglia.AsyncApi.Validation;
 
@@ -42,8 +42,6 @@ public class AsyncApiDocumentValidator
         this.RuleForEach(d => d.Servers!.Values)
             .SetValidator(new ServerValidator())
             .When(d => d.Servers != null);
-        this.RuleForEach(d => d.Tags)
-            .SetValidator(new TagValidator());
     }
 
 }

@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v2;
-using Neuroglia.AsyncApi.v2.Bindings.Mqtt;
+using Neuroglia.AsyncApi.v3;
+using Neuroglia.AsyncApi.v3.Bindings.Mqtt;
 using System.Net.Mime;
 
 namespace Neuroglia.AsyncApi.UnitTests.Services;
@@ -40,7 +40,25 @@ internal static class AsyncApiDocumentFactory
                 {
                     Name = "Apache-2.0",
                     Url = new("https://spdx.org/licenses/Apache-2.0.html")
-                }
+                },
+                ExternalDocs = new()
+                {
+                    Url = new("https://fake.contact.com"),
+                    Description = "Fake Documentation Description"
+                },
+                Tags =
+                [
+                    new TagDefinition()
+                    {
+                        Name = "fake-tag",
+                        Description = "Fake Tag Description",
+                        ExternalDocs = new()
+                        {
+                            Url = new("https://fake.contact.com"),
+                            Description = "Fake Documentation Description"
+                        }
+                    }
+                ]
             },
             Servers = new()
             {
@@ -48,9 +66,9 @@ internal static class AsyncApiDocumentFactory
                     "fake-server",
                     new ServerDefinition()
                     {
-                        Url = new("https://fake.contact.com"),
+                        Host = "fake.contact.com",
                         Description = "Fake AsyncAPI server",
-                        Protocol = AsyncApiProtocol.Http,
+                        Protocol = AsyncApiProtocol.Https,
                         ProtocolVersion = "latest",
                         Bindings = new()
                         {
@@ -133,25 +151,7 @@ internal static class AsyncApiDocumentFactory
                     }
                 }
             },
-            DefaultContentType = MediaTypeNames.Application.Json,
-            ExternalDocs = new()
-            {
-                Url = new("https://fake.contact.com"),
-                Description = "Fake Documentation Description"
-            },
-            Tags =
-            [
-                new TagDefinition()
-                {
-                    Name = "fake-tag",
-                    Description = "Fake Tag Description",
-                    ExternalDocs = new()
-                    {
-                        Url = new("https://fake.contact.com"),
-                        Description = "Fake Documentation Description"
-                    }
-                }
-            ]
+            DefaultContentType = MediaTypeNames.Application.Json
         };
     }
 

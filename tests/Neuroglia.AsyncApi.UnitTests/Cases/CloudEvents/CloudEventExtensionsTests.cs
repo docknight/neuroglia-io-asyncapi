@@ -16,7 +16,7 @@ using Json.Schema;
 using Microsoft.Extensions.DependencyInjection;
 using Neuroglia.AsyncApi.CloudEvents;
 using Neuroglia.AsyncApi.FluentBuilders;
-using Neuroglia.AsyncApi.v2.Bindings.Http;
+using Neuroglia.AsyncApi.v3.Bindings.Http;
 using Neuroglia.Eventing.CloudEvents;
 using Neuroglia.Serialization.Json;
 using System.Net.Mime;
