@@ -25,7 +25,9 @@ public interface IJsonSchemaExampleGenerator
     /// <param name="schema">The JSON Schema for which an example value is to be generated.</param>
     /// <param name="name">The name of the JSON Schema to generate an example for</param>
     /// <param name="requiredPropertiesOnly">A boolean indicating whether or not only the required the generator should generate values for required properties only</param>
+    /// <param name="exampleName">A machine-friendly name.</param>
+    /// <param name="summary">A short summary of what the example is about.</param>
     /// <returns>An object representing an example value conforming to the provided JSON Schema.</returns>
-    object? GenerateExample(JsonSchema schema, string? name = null, bool requiredPropertiesOnly = false);
+    MessageExample? GenerateExample(JsonSchema schema, string? name = null, bool requiredPropertiesOnly = false, string? exampleName = null, string? summary = null);
 
 }

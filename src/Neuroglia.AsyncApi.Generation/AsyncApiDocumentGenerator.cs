@@ -216,8 +216,8 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
         if(messageType != null) foreach (var tag in messageType.GetCustomAttributes<TagAttribute>()) messageBuilder.WithTag(tagBuilder => tagBuilder.WithName(tag.Name).WithDescription(tag.Description!));
         if (options == null || options.AutomaticallyGenerateExamples)
         {
-            messageBuilder.WithExample("Minimal", this.ExampleGenerator.GenerateExample(messageSchema, requiredPropertiesOnly: true)!);
-            messageBuilder.WithExample("Extended", this.ExampleGenerator.GenerateExample(messageSchema, requiredPropertiesOnly: false)!);
+            messageBuilder.WithExample(this.ExampleGenerator.GenerateExample(messageSchema, requiredPropertiesOnly: true, exampleName: "Minimal")!);
+            messageBuilder.WithExample(this.ExampleGenerator.GenerateExample(messageSchema, requiredPropertiesOnly: false, exampleName: "Extended")!);
         }
     }
 

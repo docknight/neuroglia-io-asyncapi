@@ -53,12 +53,11 @@ public abstract class MessageTraitDefinitionBuilder<TBuilder, TTrait>
     protected virtual TTrait Trait { get; } = new();
 
     /// <inheritdoc/>
-    public virtual TBuilder WithExample(string name, object example)
+    public virtual TBuilder WithExample(MessageExample example)
     {
-        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
         ArgumentNullException.ThrowIfNull(example);
         this.Trait.Examples ??= [];
-        this.Trait.Examples.Add(name, example);
+        this.Trait.Examples.Add(example);
         return (TBuilder)(object)this;
     }
 

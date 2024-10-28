@@ -59,28 +59,44 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
     }
 
     /// <inheritdoc/>
-    public virtual object? GenerateExample(JsonSchema schema, string? name = null, bool requiredPropertiesOnly = false)
+    public virtual MessageExample GenerateExample(JsonSchema schema, string? name = null, bool requiredPropertiesOnly = false, string? exampleName = null, string? summary = null)
     {
         ArgumentNullException.ThrowIfNull(schema);
-
+        var messageExample = new MessageExample
+        {
+            Name = exampleName,
+            Summary = summary,
+        };
         var constValue = schema.GetConst();
-        if (constValue != null) return constValue;
+        if (constValue != null)
+        {
+            messageExample.Payload = constValue;
+            return messageExample;
+        }
 
         var enumValues = schema.GetEnum();
-        if (enumValues != null) return enumValues.FirstOrDefault()?.ToString();
+        if (enumValues != null)
+        {
+            messageExample.Payload = enumValues.FirstOrDefault()?.ToString();
+            return messageExample;
+        }
 
         var examples = schema.GetExamples();
-        if (examples != null && examples.Count != 0) return examples.FirstOrDefault()?.ToString();
+        if (examples != null && examples.Count != 0)
+        {
+            messageExample.Payload = examples.FirstOrDefault()?.ToString();
+            return messageExample;
+        }
 
         var schemaType = schema.GetJsonType() & ~SchemaValueType.Null;
         return schemaType switch
         {
-            SchemaValueType.Array => GenerateExampleArray(schema, requiredPropertiesOnly),
-            SchemaValueType.Boolean => GenerateExampleBoolean(schema),
-            SchemaValueType.Integer => GenerateExampleInteger(schema),
-            SchemaValueType.Number => GenerateExampleNumber(schema),
-            SchemaValueType.Object => GenerateExampleObject(schema, requiredPropertiesOnly),
-            SchemaValueType.String => GenerateExampleString(schema),
+            SchemaValueType.Array => GenerateExampleArray(messageExample, schema, requiredPropertiesOnly),
+            SchemaValueType.Boolean => GenerateExampleBoolean(messageExample, schema),
+            SchemaValueType.Integer => GenerateExampleInteger(messageExample, schema),
+            SchemaValueType.Number => GenerateExampleNumber(messageExample, schema),
+            SchemaValueType.Object => GenerateExampleObject(messageExample, schema, requiredPropertiesOnly),
+            SchemaValueType.String => GenerateExampleString(messageExample, schema),
             _ => null
         };
     }
@@ -91,7 +107,7 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
     /// <param name="schema">The <see cref="JsonSchema"/> the array to generate must conform to</param>
     /// <param name="requiredPropertiesOnly">A boolean indicating whether or not only the required the generator should generate values for required properties only</param>
     /// <returns>A new example array</returns>
-    protected virtual IEnumerable? GenerateExampleArray(JsonSchema schema, bool requiredPropertiesOnly)
+    protected virtual MessageExample GenerateExampleArray(MessageExample example, JsonSchema schema, bool requiredPropertiesOnly)
     {
         ArgumentNullException.ThrowIfNull(schema);
 
@@ -103,9 +119,10 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
 
         var array = new List<object>(itemsCount);
         var itemSchema = schema.GetItems() ?? this.DefaultSchema;
-        for (var i = 0; i < itemsCount; i++) array.Add(GenerateExample(itemSchema, string.Empty, requiredPropertiesOnly)!);
+        for (var i = 0; i < itemsCount; i++) array.Add(GenerateExample(itemSchema, string.Empty, requiredPropertiesOnly).Payload);
 
-        return array;
+        example.Payload = array;
+        return example;
     }
 
     /// <summary>
@@ -113,21 +130,29 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
     /// </summary>
     /// <param name="schema">The <see cref="JsonSchema"/> the boolean to generate must conform to</param>
     /// <returns>A new boolean</returns>
-    protected virtual bool? GenerateExampleBoolean(JsonSchema schema) => new Random().Next(0, 1) == 1;
+    protected virtual MessageExample GenerateExampleBoolean(MessageExample example, JsonSchema schema) 
+    { 
+        example.Payload = new Random().Next(0, 1) == 1;
+        return example;
+    }
 
     /// <summary>
     /// Generates a new example array that conforms to the specified <see cref="JsonSchema"/>
     /// </summary>
     /// <param name="schema">The <see cref="JsonSchema"/> the integer to generate must conform to</param>
     /// <returns>A new integer</returns>
-    protected virtual int? GenerateExampleInteger(JsonSchema schema) => new Random().Next(0, 100);
+    protected virtual MessageExample GenerateExampleInteger(MessageExample example, JsonSchema schema)
+    {
+        example.Payload = new Random().Next(0, 100);
+        return example;
+    }
 
     /// <summary>
     /// Generates a new example number that conforms to the specified <see cref="JsonSchema"/>
     /// </summary>
     /// <param name="schema">The <see cref="JsonSchema"/> the number to generate must conform to</param>
     /// <returns>A new number</returns>
-    protected virtual object? GenerateExampleNumber(JsonSchema schema)
+    protected virtual MessageExample GenerateExampleNumber(MessageExample example, JsonSchema schema)
     {
         ArgumentNullException.ThrowIfNull(schema);
 
@@ -138,7 +163,8 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
         if (minItems.HasValue && minItems > 0) min = minItems.Value;
         if (maxItems.HasValue && maxItems < 5) max = maxItems.Value;
 
-        return decimal.Round(new Random().NextDecimal(min, max), 2);
+        example.Payload = decimal.Round(new Random().NextDecimal(min, max), 2);
+        return example;
     }
 
     /// <summary>
@@ -146,12 +172,14 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
     /// </summary>
     /// <param name="schema">The <see cref="JsonSchema"/> the object to generate must conform to</param>
     /// <param name="requiredPropertiesOnly">A boolean indicating whether or not only the required the generator should generate values for required properties only</param>
+    /// <param name="name">A machine-friendly name.</param>
+    /// <param name="summary">A short summary of what the example is about.</param>
     /// <returns>A new object</returns>
-    protected virtual object? GenerateExampleObject(JsonSchema schema, bool requiredPropertiesOnly)
+    protected virtual MessageExample? GenerateExampleObject(MessageExample messageExample, JsonSchema schema, bool requiredPropertiesOnly)
     {
         ArgumentNullException.ThrowIfNull(schema);
-
         var example = new JsonObject();
+        messageExample.Payload = example;
         var objectSchema = schema;
         if (objectSchema.GetProperties()?.Any() != true) schema = this.DefaultSchema;
 
@@ -160,15 +188,15 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
         if (properties == null)
         {
 
-            if (requiredPropertiesOnly) return example;
+            if (requiredPropertiesOnly) return messageExample;
 
-            var propertyValue = this.GenerateExample(new JsonSchemaBuilder().FromType<string>());
+            var propertyValue = this.GenerateExample(new JsonSchemaBuilder().FromType<string>()).Payload;
             example.Add("property1", JsonNode.Parse(this.Serializer.SerializeToText(propertyValue)));
 
-            propertyValue = this.GenerateExample(new JsonSchemaBuilder().FromType<string>());
+            propertyValue = this.GenerateExample(new JsonSchemaBuilder().FromType<string>()).Payload;
             example.Add("property2", JsonNode.Parse(this.Serializer.SerializeToText(propertyValue)));
 
-            propertyValue = this.GenerateExample(new JsonSchemaBuilder().FromType<string>());
+            propertyValue = this.GenerateExample(new JsonSchemaBuilder().FromType<string>()).Payload;
             example.Add("property3", JsonNode.Parse(this.Serializer.SerializeToText(propertyValue)));
 
         }
@@ -176,12 +204,12 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
         {
             foreach (var property in properties)
             {
-                var propertyValue = this.GenerateExample(property.Value, property.Key, requiredPropertiesOnly);
+                var propertyValue = this.GenerateExample(property.Value, property.Key, requiredPropertiesOnly).Payload;
                 example.Add(property.Key, JsonNode.Parse(this.Serializer.SerializeToText(propertyValue)));
             }
         }
 
-        return example;
+        return messageExample;
     }
 
     /// <summary>
@@ -189,26 +217,33 @@ public class JsonSchemaExampleGenerator(IJsonSerializer serializer)
     /// </summary>
     /// <param name="schema">The <see cref="JsonSchema"/> the string to generate must conform to</param>
     /// <returns>A new number</returns>
-    protected virtual string? GenerateExampleString(JsonSchema schema)
+    protected virtual MessageExample GenerateExampleString(MessageExample example, JsonSchema schema)
     {
         var format = schema.GetFormat();
-        if (format == null) return "string";
-
-        return format.Key switch
+        if (format == null)
         {
-            "date-time" => DateTimeOffset.Now.ToString("O"),
-            "duration" => "PT1S",
-            "email" => "example@email.com",
-            "hostname" => "hostname.example.com",
-            "ipv4" => "192.168.0.1",
-            "ipv6" => "::ffff:192.168.0.1",
-            "uri" => "https://example-uri.com",
-            "uri-reference" => "/example/uri-reference",
-            "uri-template" => "/example/uri-{template}",
-            "regex" or "regular-expression" => "^[a-zA-Z0-9]",
-            "uuid" => Guid.Empty.ToString(),
-            _ => "string",
-        };
+            example.Payload = "string";
+        }
+        else
+        {
+            example.Payload = format.Key switch
+            {
+                "date-time" => DateTimeOffset.Now.ToString("O"),
+                "duration" => "PT1S",
+                "email" => "example@email.com",
+                "hostname" => "hostname.example.com",
+                "ipv4" => "192.168.0.1",
+                "ipv6" => "::ffff:192.168.0.1",
+                "uri" => "https://example-uri.com",
+                "uri-reference" => "/example/uri-reference",
+                "uri-template" => "/example/uri-{template}",
+                "regex" or "regular-expression" => "^[a-zA-Z0-9]",
+                "uuid" => Guid.Empty.ToString(),
+                _ => "string",
+            };
+        }
+
+        return example;
     }
 
 }

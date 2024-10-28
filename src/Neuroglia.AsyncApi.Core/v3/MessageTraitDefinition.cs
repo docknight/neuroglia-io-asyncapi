@@ -85,12 +85,10 @@ public record MessageTraitDefinition
     public virtual MessageBindingDefinitionCollection? Bindings { get; set; }
 
     /// <summary>
-    /// Gets/sets an <see cref="IDictionary{TKey, TValue}"/> where keys MUST be either headers and/or payload. 
-    /// Values MUST contain examples that validate against the headers or payload fields, respectively. 
-    /// Example MAY also have the name and summary additional keys to provide respectively a machine-friendly name and a short summary of what the example is about.
+    /// Gets/sets a list of examples. 
     /// </summary>
     [DataMember(Order = 11, Name = "examples"), JsonPropertyOrder(11), JsonPropertyName("examples"), YamlMember(Order = 11, Alias = "examples")]
-    public virtual EquatableDictionary<string, object>? Examples { get; set; }
+    public virtual EquatableList<MessageExample>? Examples { get; set; }
 
     /// <inheritdoc/>
     public override string ToString() => Name ?? base.ToString();

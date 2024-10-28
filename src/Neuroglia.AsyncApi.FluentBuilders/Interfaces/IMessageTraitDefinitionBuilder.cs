@@ -112,10 +112,9 @@ public interface IMessageTraitDefinitionBuilder<TBuilder, TTrait>
     /// <summary>
     /// Adds the specified example to the <see cref="MessageTraitDefinition"/> to build
     /// </summary>
-    /// <param name="name">The name of the example to add</param>
     /// <param name="example">The example to use</param>
     /// <returns>The configured <see cref="IMessageTraitDefinitionBuilder{TBuilder, TTrait}"/></returns>
-    TBuilder WithExample(string name, object example);
+    TBuilder WithExample(MessageExample example);
 
     /// <summary>
     /// Adds the specified external documentation to the <see cref="MessageTraitDefinition"/> to build

@@ -45,7 +45,8 @@ public class JsonSchemaExampleGeneratorTests
         var schema = new JsonSchemaBuilder().FromType(typeof(List<int>));
 
         //act
-        var generated = ((IEnumerable)this.ExampleGenerator.GenerateExample(schema)!).OfType<int>();
+        var example = this.ExampleGenerator.GenerateExample(schema);
+        var generated = ((IEnumerable)example!.Payload).OfType<int>();
 
         //assert
         generated.Should().NotBeNull();
@@ -59,7 +60,8 @@ public class JsonSchemaExampleGeneratorTests
         var schema = new JsonSchemaBuilder().FromType(typeof(bool));
 
         //act
-        var generated = (bool?)this.ExampleGenerator.GenerateExample(schema);
+        var example = this.ExampleGenerator.GenerateExample(schema);
+        var generated = (bool?)example?.Payload;
 
         //assert
         generated.Should().NotBeNull();
@@ -72,7 +74,8 @@ public class JsonSchemaExampleGeneratorTests
         var schema = new JsonSchemaBuilder().FromType(typeof(int));
 
         //act
-        var generated = (int?)this.ExampleGenerator.GenerateExample(schema);
+        var example = this.ExampleGenerator.GenerateExample(schema);
+        var generated = (int?)example?.Payload;
 
         //assert
         generated.Should().NotBeNull();
@@ -85,7 +88,8 @@ public class JsonSchemaExampleGeneratorTests
         var schema = new JsonSchemaBuilder().FromType(typeof(decimal));
 
         //act
-        var generated = (decimal?)this.ExampleGenerator.GenerateExample(schema);
+        var example = this.ExampleGenerator.GenerateExample(schema);
+        var generated = (decimal?)example?.Payload;
 
         //assert
         generated.Should().NotBeNull();
@@ -111,7 +115,8 @@ public class JsonSchemaExampleGeneratorTests
         var schema = new JsonSchemaBuilder().FromType(typeof(string));
 
         //act
-        var generated = (string?)this.ExampleGenerator.GenerateExample(schema);
+        var example = this.ExampleGenerator.GenerateExample(schema);
+        var generated = (string?)example?.Payload;
 
         //assert
         generated.Should().NotBeNull();

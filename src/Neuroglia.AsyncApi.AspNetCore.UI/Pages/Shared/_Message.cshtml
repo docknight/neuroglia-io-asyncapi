@@ -100,7 +100,7 @@
                             </div>
                             <div class="col-5 bg-secondary text-light p-3 rounded-1">
                                 @{
-                                    var example = examples != null && examples.Any() ? examples.Last().Value : this.ExampleGenerator.GenerateExample(payloadSchema);
+                                    var example = examples != null && examples.Any() ? examples.Last() : this.ExampleGenerator.GenerateExample(payloadSchema);
                                     var serializationOptions = new System.Text.Json.JsonSerializerOptions();
                                     Neuroglia.Serialization.Json.JsonSerializer.DefaultOptionsConfiguration(serializationOptions);
                                     serializationOptions.WriteIndented = true;
