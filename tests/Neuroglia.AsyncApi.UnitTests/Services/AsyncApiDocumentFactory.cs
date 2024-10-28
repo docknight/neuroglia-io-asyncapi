@@ -121,11 +121,10 @@ internal static class AsyncApiDocumentFactory
             Operations = new()
             {
                 {
-                    "Publish",
+                    "fake-operation-id",
                     new()
                     {
                         Action = ActionType.Receive,
-                        OperationId = "fake-operation-id",
                         Description = "Fake Operation Description",
                         Summary = "Fake Operation Summary",
                         Bindings = new()

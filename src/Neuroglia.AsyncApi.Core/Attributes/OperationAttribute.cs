@@ -54,7 +54,7 @@ public abstract class OperationAttribute(ActionType actionType, Type? messageTyp
     /// <summary>
     /// Gets/sets the <see cref="OperationDefinition"/>'s operation id
     /// </summary>
-    public virtual string? OperationId { get; set; }
+    public virtual string OperationId { get; set; }
 
     /// <summary>
     /// Gets/sets the <see cref="OperationDefinition"/>'s summary

@@ -27,18 +27,18 @@ public interface IOperationTraitDefinitionBuilder<TBuilder, TTrait>
 {
 
     /// <summary>
-    /// Configures the <see cref="OperationTraitDefinition"/> to use the specified id
-    /// </summary>
-    /// <param name="operationId">The id of the Async Api document to build</param>
-    /// <returns>The configured <see cref="IOperationTraitDefinitionBuilder{TBuilder, TTrait}"/></returns>
-    TBuilder WithOperationId(string operationId);
-
-    /// <summary>
     /// Configures the <see cref="OperationTraitDefinition"/> to use the specified API description
     /// </summary>
     /// <param name="summary">The summary of the Async Api document to build</param>
     /// <returns>The configured <see cref="IOperationTraitDefinitionBuilder{TBuilder, TTrait}"/></returns>
     TBuilder WithSummary(string summary);
+
+    /// <summary>
+    /// Configures the <see cref="OperationTraitDefinition"/> to use the specified API title
+    /// </summary>
+    /// <param name="title">The title of the Async Api operation to build</param>
+    /// <returns>The configured <see cref="IOperationTraitDefinitionBuilder{TBuilder, TTrait}"/></returns>
+    TBuilder WithTitle(string title);
 
     /// <summary>
     /// Configures the <see cref="OperationTraitDefinition"/> to use the specified API description

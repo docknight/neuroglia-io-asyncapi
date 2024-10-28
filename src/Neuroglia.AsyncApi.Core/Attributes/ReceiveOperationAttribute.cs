@@ -27,12 +27,18 @@ public class ReceiveOperationAttribute
     /// </summary>
     /// <param name="messageType">The <see cref="OperationDefinition"/>'s message type</param>
     /// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
-    public ReceiveOperationAttribute(Type messageType, string channelName) : base(ActionType.Receive, messageType, channelName) { }
+    public ReceiveOperationAttribute(string operationId, Type messageType, string channelName) : base(ActionType.Receive, messageType, channelName) 
+    {
+        OperationId = operationId;
+    }
 
     /// <summary>
     /// Initializes a new <see cref="ReceiveOperationAttribute"/>
     /// </summary>
     /// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
-    public ReceiveOperationAttribute(string channelName) : base(ActionType.Receive, channelName) { }
+    public ReceiveOperationAttribute(string operationId, string channelName) : base(ActionType.Receive, channelName) 
+    { 
+        OperationId = operationId;
+    }
 
 }

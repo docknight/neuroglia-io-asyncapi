@@ -237,16 +237,14 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(operation);
 
-        builder.WithOperation(operation.ActionType, operationBuilder =>
+        builder.WithOperation(operation.OperationId, operation.ActionType, operationBuilder =>
         {
-            var operationId = operation.OperationId;
-            if (string.IsNullOrWhiteSpace(operationId)) operationId = (method.Name.EndsWith("Async") ? method.Name[..^5] : method.Name).ToCamelCase();
+            if (string.IsNullOrWhiteSpace(operation.OperationId)) operation.OperationId = (method.Name.EndsWith("Async") ? method.Name[..^5] : method.Name).ToCamelCase();
             var description = operation.Description;
             if (string.IsNullOrWhiteSpace(description)) description = XmlDocumentationHelper.SummaryOf(method);
             var summary = operation.Summary;
             if (string.IsNullOrWhiteSpace(summary)) summary = description;
             operationBuilder
-                .WithOperationId(operationId)
                 .WithDescription(description!)
                 .WithSummary(summary!)
                 .WithReferenceToChannelDefinition(channelId)

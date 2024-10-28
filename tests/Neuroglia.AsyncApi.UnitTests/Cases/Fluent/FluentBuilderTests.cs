@@ -109,15 +109,13 @@ public class FluentBuilderTests
                 .WithLocation(channelParameterLocation)
                 .WithDescription(channelParameterDescription)
                 .WithSchema(channelParameterSchema)))
-            .WithReceiveOperation(receive => receive
-                .WithOperationId(receiveOperationId)
+            .WithReceiveOperation(receiveOperationId, receive => receive
                 .WithDescription(receiveOperationDescription)
                 .WithSummary(receiveOperationSummary)
                 .WithBinding(new HttpOperationBindingDefinition())
                 .WithReferenceToChannelDefinition(channelName)
                 .WithReferenceToMessageDefinition("licensedefinition-msg"))
-            .WithSendOperation(send => send
-                .WithOperationId(sendOperationId)
+            .WithSendOperation(sendOperationId, send => send
                 .WithDescription(sendOperationDescription)
                 .WithSummary(sendOperationSummary)
                 .WithBinding(new HttpOperationBindingDefinition())
@@ -172,12 +170,12 @@ public class FluentBuilderTests
         channel.Value.Messages.Should().HaveCount(2);
         var operations = document.Operations.Values;
         operations.Should().HaveCount(2);
-        var receiveOperation = operations.SingleOrDefault(o => o.OperationId == receiveOperationId);
+        document.Operations.TryGetValue(receiveOperationId, out var receiveOperation);
         receiveOperation.Should().NotBeNull();
         receiveOperation!.Description.Should().Be(receiveOperationDescription);
         receiveOperation.Summary.Should().Be(receiveOperationSummary);
         receiveOperation.Messages.Should().NotBeNull();
-        var sendOperation = operations.SingleOrDefault(o => o.OperationId == sendOperationId);
+        document.Operations.TryGetValue(sendOperationId, out var sendOperation);
         sendOperation.Should().NotBeNull();
         sendOperation!.Description.Should().Be(sendOperationDescription);
         sendOperation.Summary.Should().Be(sendOperationSummary);

@@ -90,7 +90,7 @@ public class CloudEventExtensionsTests
                        .WithDataContentType(dataContentType)
                        .WithDataSchemaUri(dataSchemaUri)
                        .WithDataOfType<FakeEvent>()))
-            .WithReceiveOperation(operation => operation
+            .WithReceiveOperation("fake-operation", operation => operation
                    .WithReferenceToChannelDefinition("fake-channel")
                    .WithReferenceToMessageDefinition("FakeEvent"));
         var document = documentBuilder.Build();

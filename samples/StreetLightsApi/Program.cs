@@ -84,8 +84,7 @@ builder.Services.AddAsyncApiDocument(document => document
                     .WithCorrelationId("$message.payload#/subject")
                     .WithTag(tag => tag
                         .WithName("movement"))))
-    .WithReceiveOperation(operation => operation
-            .WithOperationId("ObserveCloudEvents")
+    .WithReceiveOperation("ObserveCloudEvents", operation => operation
             .WithDescription("Observes cloud events published by the StreetLightsApi")
             .WithBinding(new HttpOperationBindingDefinition() { Method = Neuroglia.AsyncApi.v3.Bindings.Http.HttpMethod.POST, Type = HttpBindingOperationType.Response })
             .WithReferenceToChannelDefinition("/events")

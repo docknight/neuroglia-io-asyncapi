@@ -89,16 +89,16 @@ public abstract class OperationTraitDefinitionBuilder<TBuilder, TTrait>
     }
 
     /// <inheritdoc/>
-    public virtual TBuilder WithOperationId(string operationId)
+    public virtual TBuilder WithSummary(string summary)
     {
-        this.Trait.OperationId = operationId;
+        this.Trait.Summary = summary;
         return (TBuilder)(object)this;
     }
 
     /// <inheritdoc/>
-    public virtual TBuilder WithSummary(string summary)
+    public virtual TBuilder WithTitle(string title)
     {
-        this.Trait.Summary = summary;
+        this.Trait.Title = title;
         return (TBuilder)(object)this;
     }
 

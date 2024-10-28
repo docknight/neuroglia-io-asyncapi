@@ -163,22 +163,22 @@ public class AsyncApiDocumentBuilder(IServiceProvider serviceProvider, IEnumerab
     }
 
     /// <inheritdoc/>
-    public virtual IAsyncApiDocumentBuilder WithOperation(ActionType type, Action<IOperationDefinitionBuilder> setup)
+    public virtual IAsyncApiDocumentBuilder WithOperation(string operationId, ActionType type, Action<IOperationDefinitionBuilder> setup)
     {
         ArgumentNullException.ThrowIfNull(setup);
         var builder = ActivatorUtilities.CreateInstance<OperationDefinitionBuilder>(this.ServiceProvider);
         setup(builder);
         builder.WithActionType(type);
         this.Document.Operations ??= [];
-        this.Document.Operations.Add(type.ToString(), builder.Build());
+        this.Document.Operations.Add(operationId, builder.Build());
         return this;
     }
 
     /// <inheritdoc/>
-    public virtual IAsyncApiDocumentBuilder WithSendOperation(Action<IOperationDefinitionBuilder> setup) => this.WithOperation(ActionType.Send, setup);
+    public virtual IAsyncApiDocumentBuilder WithSendOperation(string operationId, Action<IOperationDefinitionBuilder> setup) => this.WithOperation(operationId, ActionType.Send, setup);
 
     /// <inheritdoc/>
-    public virtual IAsyncApiDocumentBuilder WithReceiveOperation(Action<IOperationDefinitionBuilder> setup) => this.WithOperation(ActionType.Receive, setup);
+    public virtual IAsyncApiDocumentBuilder WithReceiveOperation(string operationId, Action<IOperationDefinitionBuilder> setup) => this.WithOperation(operationId, ActionType.Receive, setup);
 
     /// <inheritdoc/>
     public virtual IAsyncApiDocumentBuilder WithSecurityScheme(string name, SecuritySchemeDefinition scheme)

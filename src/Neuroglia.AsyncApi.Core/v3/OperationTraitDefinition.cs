@@ -24,10 +24,10 @@ public record OperationTraitDefinition
 {
 
     /// <summary>
-    /// Gets/sets a unique string used to identify the operation. The id MUST be unique among all operations described in the API. The operationId value is case-sensitive. Tools and libraries MAY use the operationId to uniquely identify an operation, therefore, it is RECOMMENDED to follow common programming naming conventions.
+    /// Gets/sets a human-friendly title for the operation.
     /// </summary>
-    [DataMember(Order = 1, Name = "operationId"), JsonPropertyOrder(1), JsonPropertyName("operationId"), YamlMember(Order = 1, Alias = "operationId")]
-    public virtual string? OperationId { get; set; }
+    [DataMember(Order = 1, Name = "title"), JsonPropertyOrder(1), JsonPropertyName("title"), YamlMember(Order = 1, Alias = "title")]
+    public virtual string? Title { get; set; }
 
     /// <summary>
     /// Gets/sets a short summary of what the operation is about.
@@ -60,6 +60,6 @@ public record OperationTraitDefinition
     public virtual OperationBindingDefinitionCollection? Bindings { get; set; }
 
     /// <inheritdoc/>
-    public override string ToString() => OperationId ?? base.ToString();
+    public override string ToString() => Title ?? base.ToString();
 
 }

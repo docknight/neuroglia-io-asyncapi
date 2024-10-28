@@ -27,12 +27,18 @@ public class SendOperationAttribute
     /// </summary>
     /// <param name="messageType">The <see cref="OperationDefinition"/>'s message type</param>
     /// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
-    public SendOperationAttribute(Type messageType, string channelName) : base(ActionType.Send, messageType, channelName) { }
+    public SendOperationAttribute(string operationId, Type messageType, string channelName) : base(ActionType.Send, messageType, channelName) 
+    { 
+        OperationId = operationId;
+    }
 
     /// <summary>
     /// Initializes a new <see cref="OperationAttribute"/>
     /// </summary>
     /// <param name="channelName">The <see cref="OperationDefinition"/>'s channel name.</param>
-    public SendOperationAttribute(string channelName) : base(ActionType.Send, channelName) { }
+    public SendOperationAttribute(string operationId, string channelName) : base(ActionType.Send, channelName) 
+    { 
+        OperationId = operationId;
+    }
 
 }

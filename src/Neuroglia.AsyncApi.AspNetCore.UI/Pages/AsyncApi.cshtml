@@ -78,7 +78,7 @@
             <div id="operations" class="card-body p-0 collapse show">
                 @foreach (var operation in document.Operations)
                 {
-                    <partial name="_Operation" model="new OperationDefinitionViewModel(document, operation.Key, operation.Value.Action, operation.Value, document.DereferenceMessageDefinitionsForOperation(operation.Value))" />
+                    <partial name="_Operation" model="new OperationDefinitionViewModel(document, operation.Value.Channel?.Reference, operation.Value.Action, operation.Value, operation.Key, document.DereferenceMessageDefinitionsForOperation(operation.Value))" />
                 }
             </div>
         </div>

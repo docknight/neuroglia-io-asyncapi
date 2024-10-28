@@ -79,44 +79,44 @@ public record AsyncApiDocument
     [DataMember(Order = 8, Name = "components"), JsonPropertyOrder(8), JsonPropertyName("components"), YamlMember(Order = 8, Alias = "components")]
     public virtual ComponentDefinitionCollection? Components { get; set; }
 
-    /// <summary>
-    /// Attempts to get the <see cref="OperationDefinition"/> with the specified id
-    /// </summary>
-    /// <param name="operationId">The id of the <see cref="OperationDefinition"/> to get</param>
-    /// <param name="operation">The resulting <see cref="OperationDefinition"/>, if any</param>
-    /// <param name="channelName">The name of the <see cref="ChannelDefinition"/> the <see cref="OperationDefinition"/> belongs to, if any</param>
-    /// <returns>A boolean indicating whether or not the <see cref="OperationDefinition"/> with the specified id could be found</returns>
-    public virtual bool TryGetOperation(string operationId, out OperationDefinition? operation, out string? channelName)
-    {
-        if (string.IsNullOrWhiteSpace(operationId)) throw new ArgumentNullException(nameof(operationId));
-        operation = Operations?.FirstOrDefault(o => o.Value.OperationId == operationId).Value;
-        channelName = operation?.Channel?.Reference;
-        return true;
-    }
+    ///// <summary>
+    ///// Attempts to get the <see cref="OperationDefinition"/> with the specified id
+    ///// </summary>
+    ///// <param name="operationId">The id of the <see cref="OperationDefinition"/> to get</param>
+    ///// <param name="operation">The resulting <see cref="OperationDefinition"/>, if any</param>
+    ///// <param name="channelName">The name of the <see cref="ChannelDefinition"/> the <see cref="OperationDefinition"/> belongs to, if any</param>
+    ///// <returns>A boolean indicating whether or not the <see cref="OperationDefinition"/> with the specified id could be found</returns>
+    //public virtual bool TryGetOperation(string operationId, out OperationDefinition? operation, out string? channelName)
+    //{
+    //    if (string.IsNullOrWhiteSpace(operationId)) throw new ArgumentNullException(nameof(operationId));
+    //    operation = Operations?.FirstOrDefault(o => o.Value.OperationId == operationId).Value;
+    //    channelName = operation?.Channel?.Reference;
+    //    return true;
+    //}
 
-    /// <summary>
-    /// Attempts to get the <see cref="OperationDefinition"/> with the specified id
-    /// </summary>
-    /// <param name="operationId">The id of the <see cref="OperationDefinition"/> to get</param>
-    /// <param name="operation">The resulting <see cref="OperationDefinition"/>, if any</param>
-    /// <returns>A boolean indicating whether or not the <see cref="OperationDefinition"/> with the specified id could be found</returns>
-    public virtual bool TryGetOperation(string operationId, out OperationDefinition? operation)
-    {
-        if (string.IsNullOrWhiteSpace(operationId))
-            throw new ArgumentNullException(nameof(operationId));
-        return TryGetOperation(operationId, out operation, out _);
-    }
+    ///// <summary>
+    ///// Attempts to get the <see cref="OperationDefinition"/> with the specified id
+    ///// </summary>
+    ///// <param name="operationId">The id of the <see cref="OperationDefinition"/> to get</param>
+    ///// <param name="operation">The resulting <see cref="OperationDefinition"/>, if any</param>
+    ///// <returns>A boolean indicating whether or not the <see cref="OperationDefinition"/> with the specified id could be found</returns>
+    //public virtual bool TryGetOperation(string operationId, out OperationDefinition? operation)
+    //{
+    //    if (string.IsNullOrWhiteSpace(operationId))
+    //        throw new ArgumentNullException(nameof(operationId));
+    //    return TryGetOperation(operationId, out operation, out _);
+    //}
 
-    /// <summary>
-    /// Determines whether or not the <see cref="ChannelDefinition"/> defines an <see cref="OperationDefinition"/> with the specified id
-    /// </summary>
-    /// <param name="operationId">The id of the operation to check</param>
-    /// <returns>A boolean indicating whether or not the <see cref="ChannelDefinition"/> defines an <see cref="OperationDefinition"/> with the specified id</returns>
-    public virtual bool DefinesOperationWithId(string operationId)
-    {
-        if (string.IsNullOrWhiteSpace(operationId)) throw new ArgumentNullException(nameof(operationId));
-        return Operations != null && Operations.Any(o => o.Value.OperationId == operationId);
-    }
+    ///// <summary>
+    ///// Determines whether or not the <see cref="ChannelDefinition"/> defines an <see cref="OperationDefinition"/> with the specified id
+    ///// </summary>
+    ///// <param name="operationId">The id of the operation to check</param>
+    ///// <returns>A boolean indicating whether or not the <see cref="ChannelDefinition"/> defines an <see cref="OperationDefinition"/> with the specified id</returns>
+    //public virtual bool DefinesOperationWithId(string operationId)
+    //{
+    //    if (string.IsNullOrWhiteSpace(operationId)) throw new ArgumentNullException(nameof(operationId));
+    //    return Operations != null && Operations.Any(o => o.Value.OperationId == operationId);
+    //}
 
     public virtual List<MessageDefinition> DereferenceMessageDefinitionsForOperation(OperationDefinition operation)
     {
@@ -129,7 +129,7 @@ public record AsyncApiDocument
         var channel = this.DereferenceChannelDefinitionForOperation(operation);
         if (channel == null)
         {
-            throw new Exception($"Channel not found for operation {operation.OperationId}.");
+            throw new InvalidOperationException($"Channel not found for operation {operation.Title ?? operation.Summary}.");
         }
 
         if (operation.Messages == null || channel.Messages == null)

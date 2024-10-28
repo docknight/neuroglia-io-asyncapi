@@ -21,17 +21,22 @@ public record OperationDefinitionViewModel
 {
 
     /// <inheritdoc/>
-    public OperationDefinitionViewModel(AsyncApiDocument document, string channelKey, ActionType actionType, OperationDefinition operation, List<MessageDefinition> messages) : base(document) { this.ChannelKey = channelKey; this.ActionType = actionType; this.Operation = operation; this.Messages = messages; }
+    public OperationDefinitionViewModel(AsyncApiDocument document, string? channelKey, ActionType actionType, OperationDefinition operation, string operationId, List<MessageDefinition> messages) : base(document) { this.ChannelKey = channelKey; this.ActionType = actionType; this.Operation = operation; this.Messages = messages; this.OperationId = operationId; }
 
     /// <summary>
     /// Gets the key of the <see cref="ChannelDefinition"/> the <see cref="OperationDefinition"/> to render belongs to
     /// </summary>
-    public string ChannelKey { get; }
+    public string? ChannelKey { get; }
 
     /// <summary>
     /// Gets the type of the <see cref="OperationDefinition"/> to render
     /// </summary>
     public ActionType ActionType { get; }
+
+    /// <summary>
+    /// Gets the operation ID for reference.
+    /// </summary>
+    public string OperationId { get; }
 
     /// <summary>
     /// Gets the <see cref="OperationDefinition"/> to render
