@@ -3,9 +3,9 @@
 @{
     var actionType = this.Model.ActionType;
     var operation = this.Model.Operation;
-    var message = operation.Message;
-    var jsonPayload = message?.Payload == null ? null : this.Serializer.SerializeToText(message?.Payload);
-    var schema = string.IsNullOrWhiteSpace(jsonPayload) ? null : JsonSchema.FromText(jsonPayload);
+    var messages = this.Model.Messages;
+    // var jsonPayload = message?.Payload == null ? null : this.Serializer.SerializeToText(message?.Payload);
+    // var schema = string.IsNullOrWhiteSpace(jsonPayload) ? null : JsonSchema.FromText(jsonPayload);
     var operationRef = $"{operation.OperationId!.ToLowerInvariant()}-{EnumHelper.Stringify(actionType).ToLowerInvariant()}";
 
     var badgeColor = actionType == ActionType.Receive ? "info" : "info";
@@ -72,18 +72,18 @@
                 </div>
                 </a>
                 <div id="@(operationRef)_messages" class="card-body p-0 m-0 collapse show">
-                    @if(message == null)
+                    @if (messages == null || !messages.Any())
                     {
                         <p class="alert alert-warning fst-italic m-3">No message has been defined for the operation.</p>
                     }
-                    else if (message.OneOf == null || !message.OneOf.Any())
+                    else if (messages.Count == 1)
                     {
-                        <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, 0, operationRef, message)" />
+                        <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, 0, operationRef, messages.Single())" />
                     }
                     else
                     {
                         int index = 1;
-                        foreach(var messageOption in message.OneOf)
+                        foreach(var messageOption in messages)
                         {
                             <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, index, operationRef, messageOption)" />
                             index++;

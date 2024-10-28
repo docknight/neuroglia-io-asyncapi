@@ -80,7 +80,9 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
             .GroupBy(m => m.GetCustomAttribute<ChannelAttribute>()!.Name))
         {
             var channel = channelMethodGroup.First().GetCustomAttribute<ChannelAttribute>()!;
-            await ConfigureChannelForAsync(builder, channel, options, cancellationToken).ConfigureAwait(false);
+            var operationMethods = type.GetMethods(BindingFlags.Default | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+                .Where(m => m.GetCustomAttribute<OperationAttribute>()?.ChannelName == channel.Name);
+            await ConfigureChannelForAsync(builder, channel, options, operationMethods, cancellationToken).ConfigureAwait(false);
             channels.Add(channel);
         }
 
@@ -94,7 +96,9 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
                 throw new ArgumentException($"The specified operation '{operationMethod.Name}' is not associated with a known channel.");
             }
 
-            await ConfigureOperationForAsync(builder, operation, $"#/channels/{channel.Name}", operationMethod, options, cancellationToken).ConfigureAwait(false);
+            var message = operationMethod.GetCustomAttribute<MessageAttribute>()!;
+            var messageId = ExtractMessageName(operationMethod, operation, message);
+            await ConfigureOperationForAsync(builder, operation, channel.Name, operationMethod, options, messageId, cancellationToken).ConfigureAwait(false);
         }
 
         return builder.Build();
@@ -107,9 +111,10 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
     /// <param name="channel">The attribute used to describe the <see cref="ChannelDefinition"/> to configure</param>
     /// <param name="methods">A <see cref="List{T}"/> containing the <see cref="ChannelDefinition"/>'s <see cref="OperationDefinition"/>s <see cref="MethodInfo"/>s</param>
     /// <param name="options">The <see cref="AsyncApiDocumentGenerationOptions"/> to use</param>
+    /// <param name="operationMethods">Operations associated with the channel.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/></param>
     /// <returns>A new awaitable <see cref="Task"/></returns>
-    protected virtual async Task ConfigureChannelForAsync(IAsyncApiDocumentBuilder builder, ChannelAttribute channel, AsyncApiDocumentGenerationOptions options, CancellationToken cancellationToken = default)
+    protected virtual async Task ConfigureChannelForAsync(IAsyncApiDocumentBuilder builder, ChannelAttribute channel, AsyncApiDocumentGenerationOptions options, IEnumerable<MethodInfo>? operationMethods, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(channel);
@@ -117,8 +122,35 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
         builder.WithChannel(channel.Name, channelBuilder =>
         {
             channelBuilder.WithDescription(channel.Description!);
+            if (operationMethods != null)
+            {
+                foreach (var operationMethod in operationMethods)
+                {
+                    var operation = operationMethod.GetCustomAttribute<OperationAttribute>()!;
+                    var message = operationMethod.GetCustomAttribute<MessageAttribute>()!;
+                    string? name = ExtractMessageName(operationMethod, operation, message);
+
+                    channelBuilder.WithMessage(name, messageBuilder => ConfigureOperationMessageFor(messageBuilder, operation, operationMethod, options));
+                }
+            }
         });
         await Task.CompletedTask;
+    }
+
+    private static string? ExtractMessageName(MethodInfo operationMethod, OperationAttribute operation, MessageAttribute message)
+    {
+        var name = message?.Name;
+        if (string.IsNullOrWhiteSpace(name)) name = operation.MessageType?.Name.ToCamelCase();
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            var parameters = operationMethod.GetParameters();
+            if (parameters.Length == 1 || parameters.Length == 2 && parameters[1].ParameterType == typeof(CancellationToken))
+            {
+                name = parameters.First().ParameterType.Name;
+            }
+        }
+
+        return name;
     }
 
     /// <summary>
@@ -190,15 +222,17 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
     }
 
     /// <summary>
-    /// Builds a new <see cref="ChannelDefinition"/>
+    /// Builds a new <see cref="OperationDefinition"/>
     /// </summary>
     /// <param name="builder">The <see cref="IAsyncApiDocumentBuilder"/> to configure</param>
-    /// <param name="channel">The attribute used to describe the <see cref="ChannelDefinition"/> to configure</param>
-    /// <param name="methods">A <see cref="List{T}"/> containing the <see cref="ChannelDefinition"/>'s <see cref="OperationDefinition"/>s <see cref="MethodInfo"/>s</param>
+    /// <param name="operation">The attribute used to describe the <see cref="OperationDefinition"/> to configure</param>
+    /// <param name="channelId">Reference to the operation's channel.</param>
+    /// <param name="method">The <see cref="OperationDefinition"/>'s <see cref="MethodInfo"/></param>
     /// <param name="options">The <see cref="AsyncApiDocumentGenerationOptions"/> to use</param>
+    /// <param name="messageId">The operation's message reference.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/></param>
     /// <returns>A new awaitable <see cref="Task"/></returns>
-    protected virtual async Task ConfigureOperationForAsync(IAsyncApiDocumentBuilder builder, OperationAttribute operation, string channelReference, MethodInfo method, AsyncApiDocumentGenerationOptions options, CancellationToken cancellationToken = default)
+    protected virtual async Task ConfigureOperationForAsync(IAsyncApiDocumentBuilder builder, OperationAttribute operation, string channelId, MethodInfo method, AsyncApiDocumentGenerationOptions options, string messageId, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(operation);
@@ -214,9 +248,10 @@ public class AsyncApiDocumentGenerator(IServiceProvider serviceProvider, IJsonSc
             operationBuilder
                 .WithOperationId(operationId)
                 .WithDescription(description!)
-                .WithSummary(summary!);
+                .WithSummary(summary!)
+                .WithReferenceToChannelDefinition(channelId)
+                .WithReferenceToMessageDefinition(messageId);
             foreach (var tag in method.GetCustomAttributes<TagAttribute>()) operationBuilder.WithTag(tagBuilder => tagBuilder.WithName(tag.Name).WithDescription(tag.Description!));
-            operationBuilder.WithMessage(messageBuilder => this.ConfigureOperationMessageFor(messageBuilder, operation, method, options));
         });
         await Task.CompletedTask;
     }

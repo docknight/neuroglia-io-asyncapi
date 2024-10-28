@@ -34,10 +34,10 @@ public record OperationDefinition
     public virtual EquatableList<OperationTraitDefinition>? Traits { get; set; }
 
     /// <summary>
-    /// Gets/sets a definition of the message(s) that will be published or received on this channel.
+    /// Gets/sets message reference(s) that will be published or received with this operation.
     /// </summary>
-    [DataMember(Order = 3, Name = "message"), JsonPropertyOrder(3), JsonPropertyName("message"), YamlMember(Order = 3, Alias = "message")]
-    public virtual OperationMessageDefinition? Message { get; set; }
+    [DataMember(Order = 3, Name = "messages"), JsonPropertyOrder(3), JsonPropertyName("messages"), YamlMember(Order = 3, Alias = "messages")]
+    public virtual EquatableList<ReferenceableComponentDefinition>? Messages { get; set; }
 
     /// <summary>
     /// Gets/sets a reference to the channel for this operation.

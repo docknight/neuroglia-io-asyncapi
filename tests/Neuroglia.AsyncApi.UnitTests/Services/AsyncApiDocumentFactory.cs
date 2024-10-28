@@ -110,7 +110,11 @@ internal static class AsyncApiDocumentFactory
                         {
                             //todo
                         },
-                        Parameters = []
+                        Parameters = [],
+                        Messages = new()
+                        {
+                            //todo
+                        }
                     }
                 }
             },
@@ -128,7 +132,7 @@ internal static class AsyncApiDocumentFactory
                         {
                             //todo
                         },
-                        Message = new()
+                        Messages = new()
                         {
                             //todo
                         },

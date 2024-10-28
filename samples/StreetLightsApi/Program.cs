@@ -65,14 +65,8 @@ builder.Services.AddAsyncApiDocument(document => document
         .WithSecurityRequirement("oauth2"))
     .WithChannel("/events", channel => channel
         .WithDescription("The endpoint used to publish and subscribe to cloud events")
-        .WithBinding(new HttpChannelBindingDefinition()))
-    .WithReceiveOperation(operation => operation
-            .WithOperationId("ObserveCloudEvents")
-            .WithDescription("Observes cloud events published by the StreetLightsApi")
-            .WithBinding(new HttpOperationBindingDefinition() { Method = Neuroglia.AsyncApi.v3.Bindings.Http.HttpMethod.POST, Type = HttpBindingOperationType.Response })
-            .WithMessages
-            (
-                message => message
+        .WithBinding(new HttpChannelBindingDefinition())
+        .WithMessage("LightMeasuredEvent", message => message
                     .WithName("LightMeasuredEvent")
                     .WithDescription("The event fired whenever the luminosity of a light has been measured")
                     .WithContentType("application/cloudevents+json")
@@ -80,8 +74,8 @@ builder.Services.AddAsyncApiDocument(document => document
                     .WithPayloadSchema(lightMeasuredEventSchema)
                     .WithCorrelationId("$message.payload#/subject")
                     .WithTag(tag => tag
-                        .WithName("light")),
-                message => message
+                        .WithName("light")))
+        .WithMessage("MovementDetectedEvent", message => message        
                     .WithName("MovementDetectedEvent")
                     .WithDescription("The event fired whenever a movement has been detected by a sensor")
                     .WithContentType("application/cloudevents+json")
@@ -89,8 +83,14 @@ builder.Services.AddAsyncApiDocument(document => document
                     .WithPayloadSchema(movementDetectedEventSchema)
                     .WithCorrelationId("$message.payload#/subject")
                     .WithTag(tag => tag
-                        .WithName("movement"))
-            ))
+                        .WithName("movement"))))
+    .WithReceiveOperation(operation => operation
+            .WithOperationId("ObserveCloudEvents")
+            .WithDescription("Observes cloud events published by the StreetLightsApi")
+            .WithBinding(new HttpOperationBindingDefinition() { Method = Neuroglia.AsyncApi.v3.Bindings.Http.HttpMethod.POST, Type = HttpBindingOperationType.Response })
+            .WithReferenceToChannelDefinition("/events")
+            .WithReferenceToMessageDefinition("LightMeasuredEvent")
+            .WithReferenceToMessageDefinition("MovementDetectedEvent"))
     .WithMessageTraitComponent("cloud-event", message => message
         .WithBinding(new HttpMessageBindingDefinition())
         .WithContentType("application/cloudevents+json"))

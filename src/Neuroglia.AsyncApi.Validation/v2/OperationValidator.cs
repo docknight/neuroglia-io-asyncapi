@@ -27,15 +27,15 @@ public class OperationValidator
     /// </summary>
     public OperationValidator()
     {
+        this.RuleFor(o => o.Channel).NotNull();
+        this.RuleFor(o => o.Channel!.Reference).NotEmpty();
         this.RuleForEach(o => o.Tags)
             .SetValidator(new TagValidator());
         this.RuleForEach(o => o.Traits)
             .SetValidator(new OperationTraitValidator());
-        this.RuleFor(o => o.Message!)
-            .SetValidator(new MessageValidator());
-        this.RuleForEach(o => o.Message!.OneOf)
-            .SetValidator(new MessageValidator())
-            .When(o => o.Message != null);
+        this.RuleForEach(o => o.Messages)
+            .NotNull().NotEmpty()
+            .Must((o, m) => m.Reference!.StartsWith(o.Channel!.Reference!));
     }
 
 }

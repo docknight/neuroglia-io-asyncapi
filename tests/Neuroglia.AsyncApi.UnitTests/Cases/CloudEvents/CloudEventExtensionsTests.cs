@@ -81,29 +81,33 @@ public class CloudEventExtensionsTests
            .WithServer("fake-server", server => server
                .WithBinding(new HttpServerBindingDefinition()))
            .WithChannel("fake-channel", channel => channel
-               .WithBinding(new HttpChannelBindingDefinition()));
-        documentBuilder = documentBuilder.WithReceiveOperation(operation => operation
-                   .WithCloudEventMessage(cloudEvent => cloudEvent
+               .WithBinding(new HttpChannelBindingDefinition())
+               .WithCloudEventMessage("FakeEvent", cloudEvent => cloudEvent
                        .WithSpecVersion(specVersion)
                        .WithSource(source)
                        .WithType(type)
                        .WithSubject(subject)
                        .WithDataContentType(dataContentType)
                        .WithDataSchemaUri(dataSchemaUri)
-                       .WithDataOfType<FakeEvent>()));
+                       .WithDataOfType<FakeEvent>()))
+            .WithReceiveOperation(operation => operation
+                   .WithReferenceToChannelDefinition("fake-channel")
+                   .WithReferenceToMessageDefinition("FakeEvent"));
         var document = documentBuilder.Build();
 
         //assert
         document.Should().NotBeNull();
         document.Channels.Should().ContainSingle();
+        document.Channels.Single().Value.Messages.Should().NotBeNull();
+        document.Channels.Single().Value.Messages.Should().NotBeEmpty();
+        document.Channels.Single().Value.Messages!.First().Value.Payload.Should().NotBeNull();
 
         var operation = document.Operations.Single();
         operation.Value.Should().NotBeNull();
         operation.Value.Action.Should().Be(ActionType.Receive);
-        operation.Value.Message.Should().NotBeNull();
-        operation.Value.Message!.Payload.Should().NotBeNull();
+        operation.Value.Messages.Should().NotBeNull();
 
-        var schema = operation.Value.Message.Payload as JsonSchema;
+        var schema = document.Channels.Single().Value.Messages!.First().Value.Payload as JsonSchema;
         schema.Should().NotBeNull();
 
         var evaluationResults = schema!.Evaluate(validCloudEvent);

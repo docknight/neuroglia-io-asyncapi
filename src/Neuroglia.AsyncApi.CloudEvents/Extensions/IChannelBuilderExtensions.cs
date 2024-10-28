@@ -23,24 +23,24 @@ public static class IAsyncApiDocumentBuilderExtensions
 {
 
     /// <summary>
-    /// Configures the <see cref="OperationDefinition"/> to build to use the specified <see cref="MessageDefinition"/>
+    /// Configures the <see cref="ChannelDefinition"/> to build to use the specified <see cref="MessageDefinition"/>
     /// </summary>
-    /// <param name="operation">The <see cref="IOperationDefinitionBuilder"/> to configure</param>
+    /// <param name="channel">The <see cref="IChannelDefinitionBuilder"/> to configure</param>
     /// <param name="setup">An <see cref="Action{T}"/> used to setup the <see cref="MessageDefinition"/> to use</param>
     /// <returns>The configured <see cref="IOperationDefinitionBuilder"/></returns>
-    public static IOperationDefinitionBuilder WithCloudEventMessage(this IOperationDefinitionBuilder operation, Action<ICloudEventMessageDefinitionBuilder> setup)
+    public static IChannelDefinitionBuilder WithCloudEventMessage(this IChannelDefinitionBuilder channel, string messageName, Action<ICloudEventMessageDefinitionBuilder> setup)
     {
-        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(channel);
         ArgumentNullException.ThrowIfNull(setup);
 
-        operation.WithMessage(message =>
+        channel.WithMessage(messageName, message =>
         {
             var cloudEvent = new CloudEventMessageDefinitionBuilder(message);
             setup(cloudEvent);
             cloudEvent.Build();
         });
 
-        return operation;
+        return channel;
     }
 
 }

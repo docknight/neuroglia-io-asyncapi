@@ -28,18 +28,18 @@ public interface IOperationDefinitionBuilder
     IOperationDefinitionBuilder WithTrait(Action<IOperationTraitBuilder> setup);
 
     /// <summary>
-    /// Configures the <see cref="OperationDefinition"/> to build to use the specified <see cref="MessageDefinition"/>
+    /// Configures the <see cref="OperationDefinition"/> to build to use the specified <see cref="MessageDefinition"/> reference.
     /// </summary>
-    /// <param name="setup">An <see cref="Action{T}"/> used to setup the <see cref="MessageDefinition"/> to use</param>
+    /// <param name="messageId">An identifier for the <see cref="MessageDefinition"/> to use as a reference.</param>
     /// <returns>The configured <see cref="IOperationDefinitionBuilder"/></returns>
-    IOperationDefinitionBuilder WithMessage(Action<IMessageDefinitionBuilder> setup);
+    IOperationDefinitionBuilder WithReferenceToMessageDefinition(string messageId);
 
     /// <summary>
-    /// Configures the <see cref="OperationDefinition"/> to build to use the specified <see cref="MessageDefinition"/>s
+    /// Configures the <see cref="OperationDefinition"/> to build to use the specified <see cref="ChannelDefinition"/> reference.
     /// </summary>
-    /// <param name="setups">An array containing the <see cref="Action{T}"/> used to setup the <see cref="MessageDefinition"/>s to use</param>
+    /// <param name="channelId">An identifier for the <see cref="ChannelDefinition"/> to use as a reference.</param>
     /// <returns>The configured <see cref="IOperationDefinitionBuilder"/></returns>
-    IOperationDefinitionBuilder WithMessages(params Action<IMessageDefinitionBuilder>[] setups);
+    IOperationDefinitionBuilder WithReferenceToChannelDefinition(string channelId);
 
     /// <summary>
     /// Sets the <see cref="OperationDefinition"/>'s <see cref="ActionType"/>

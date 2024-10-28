@@ -26,32 +26,24 @@ public class OperationDefinitionBuilder(IServiceProvider serviceProvider, IEnume
 {
 
     /// <inheritdoc/>
-    public virtual IOperationDefinitionBuilder WithMessage(Action<IMessageDefinitionBuilder> setup)
+    public virtual IOperationDefinitionBuilder WithReferenceToMessageDefinition(string messageId)
     {
-        ArgumentNullException.ThrowIfNull(setup);
+        ArgumentNullException.ThrowIfNullOrEmpty(messageId);
+        if (string.IsNullOrEmpty(this.Trait.Channel?.Reference))
+        {
+            throw new InvalidOperationException($"The operation's channel reference must be set before adding message references.");
+        }
 
-        var builder = ActivatorUtilities.CreateInstance<MessageDefinitionBuilder>(this.ServiceProvider);
-        setup(builder);
-        this.Trait.Message = OperationMessageDefinition.From(builder.Build());
-
+        this.Trait.Messages ??= new();
+        this.Trait.Messages.Add(new ReferenceableComponentDefinition { Reference = $"{this.Trait.Channel?.Reference}/messages/{messageId}"});
         return this;
     }
 
     /// <inheritdoc/>
-    public virtual IOperationDefinitionBuilder WithMessages(params Action<IMessageDefinitionBuilder>[] setups)
-    {
-        if (setups == null || setups.Length == 0) return this;
-
-        this.Trait.Message = new()
-        {
-            OneOf = new(setups.Select(setup =>
-            {
-                var builder = ActivatorUtilities.CreateInstance<MessageDefinitionBuilder>(this.ServiceProvider);
-                setup(builder);
-                return OperationMessageDefinition.From(builder.Build());
-            }))
-        };
-
+    public virtual IOperationDefinitionBuilder WithReferenceToChannelDefinition(string channelId)
+    {         
+        ArgumentNullException.ThrowIfNullOrEmpty(channelId);
+        this.Trait.Channel = new ReferenceableComponentDefinition { Reference = $"#/channels/{channelId}" };
         return this;
     }
 

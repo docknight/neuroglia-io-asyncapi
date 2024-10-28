@@ -72,6 +72,24 @@ public class ChannelDefinitionBuilder(IServiceProvider serviceProvider, IEnumera
     }
 
     /// <inheritdoc/>
+    public virtual IChannelDefinitionBuilder WithMessage(string? name, Action<IMessageDefinitionBuilder> setup)
+    {
+        ArgumentNullException.ThrowIfNull(setup);
+
+        var builder = ActivatorUtilities.CreateInstance<MessageDefinitionBuilder>(this.ServiceProvider);
+        setup(builder);
+        this.Channel.Messages ??= new();
+        var messageDefinition = builder.Build();
+        var messageName = name ?? messageDefinition.Name;
+        if (!string.IsNullOrWhiteSpace(messageName) && !this.Channel.Messages.ContainsKey(messageName))
+        {
+            this.Channel.Messages.Add(messageName, messageDefinition);
+        }
+
+        return this;
+    }
+
+    /// <inheritdoc/>
     public virtual ChannelDefinition Build()
     {
         var validationResults = this.Validators.Select(v => v.Validate(this.Channel));

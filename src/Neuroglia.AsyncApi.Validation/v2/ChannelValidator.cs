@@ -11,8 +11,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Neuroglia.AsyncApi.v3;
-
 namespace Neuroglia.AsyncApi.Validation;
 
 /// <summary>
@@ -27,6 +25,9 @@ public class ChannelValidator
     /// </summary>
     public ChannelValidator()
     {
+        this.RuleForEach(o => o.Messages!.Values)
+            .SetValidator(new MessageValidator())
+            .When(o => o.Messages != null && o.Messages.Any());
     }
 
 }

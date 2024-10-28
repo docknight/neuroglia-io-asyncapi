@@ -118,6 +118,59 @@ public record AsyncApiDocument
         return Operations != null && Operations.Any(o => o.Value.OperationId == operationId);
     }
 
+    public virtual List<MessageDefinition> DereferenceMessageDefinitionsForOperation(OperationDefinition operation)
+    {
+        if (operation == null)
+        {
+            throw new ArgumentNullException(nameof(operation));
+        }
+
+        var messages = new List<MessageDefinition>();
+        var channel = this.DereferenceChannelDefinitionForOperation(operation);
+        if (channel == null)
+        {
+            throw new Exception($"Channel not found for operation {operation.OperationId}.");
+        }
+
+        if (operation.Messages == null || channel.Messages == null)
+        {
+            return messages;
+        }
+
+        foreach (var message in operation.Messages)
+        {
+            if (message.Reference != null)
+            {
+                if (channel.Messages.TryGetValue(message.Reference.Substring(message.Reference.LastIndexOf("/") + 1), out MessageDefinition? referencedMessage))
+                {
+                    messages.Add(referencedMessage);
+                }
+            }
+        }
+
+        return messages;
+    }
+
+    public virtual ChannelDefinition? DereferenceChannelDefinitionForOperation(OperationDefinition operation)
+    {
+        if (operation == null)
+        {
+            throw new ArgumentNullException(nameof(operation));
+        }
+
+        if (operation.Channel?.Reference == null)
+        {
+            return null;
+        }
+
+        if (this.Channels.TryGetValue(operation.Channel.Reference.Substring("#channels/".Length + 1), out ChannelDefinition? channel))
+        {
+            return channel;
+        }
+
+        return null;
+    }
+
     /// <inheritdoc/>
     public override string? ToString() => Info == null || string.IsNullOrWhiteSpace(Info.Title) ? Id : Info?.Title;
 

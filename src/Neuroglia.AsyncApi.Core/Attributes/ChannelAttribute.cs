@@ -28,18 +28,21 @@ public class ChannelAttribute
     /// </summary>
     /// <param name="name">The <see cref="ChannelDefinition"/>'s name</param>
     /// <param name="description">The <see cref="ChannelDefinition"/>'s description</param>
-    public ChannelAttribute(string name, string? description)
+    /// <param name="messageTypes">The <see cref="ChannelDefinition"/>'s message types</param>
+    public ChannelAttribute(string name, string? description, params Type[] messageTypes)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
         this.Name = name;
         this.Description = description;
+        this.MessageTypes = messageTypes;
     }
 
     /// <summary>
     /// Initializes a new <see cref="ChannelAttribute"/>
     /// </summary>
     /// <param name="name">The <see cref="ChannelDefinition"/>'s name</param>
-    public ChannelAttribute(string name) : this(name, null) { }
+    /// <param name="messageTypes">The <see cref="ChannelDefinition"/>'s message types</param>
+    public ChannelAttribute(string name, params Type[] messageTypes) : this(name, null, messageTypes) { }
 
     /// <summary>
     /// Gets the <see cref="ChannelDefinition"/>'s name
@@ -50,5 +53,10 @@ public class ChannelAttribute
     /// Gets/sets the <see cref="ChannelDefinition"/>'s description
     /// </summary>
     public virtual string? Description { get; set; }
+
+    /// <summary>
+    /// Gets/sets the <see cref="ChannelDefinition"/>'s message types
+    /// </summary>
+    public virtual Type[] MessageTypes { get; }
 
 }

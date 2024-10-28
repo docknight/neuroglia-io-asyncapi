@@ -45,6 +45,14 @@ public interface IChannelDefinitionBuilder
     IChannelDefinitionBuilder WithBinding(IChannelBindingDefinition binding);
 
     /// <summary>
+    /// Adds a new <see cref="MessageDefinition"/> to the <see cref="ChannelDefinition"/> to build
+    /// </summary>
+    /// <param name="name">The name of the <see cref="MessageDefinition"/> to add</param>
+    /// <param name="setup">An <see cref="Action{T}"/> used to setup the <see cref="MessageDefinition"/> to add</param>
+    /// <returns>The configured <see cref="IChannelDefinitionBuilder"/></returns>
+    IChannelDefinitionBuilder WithMessage(string? name, Action<IMessageDefinitionBuilder> setup);
+
+    /// <summary>
     /// Builds a new <see cref="ChannelDefinition"/>
     /// </summary>
     /// <returns>A new <see cref="ChannelDefinition"/></returns>

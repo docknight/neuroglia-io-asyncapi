@@ -100,28 +100,29 @@ public class FluentBuilderTests
                 .WithBinding(new HttpServerBindingDefinition()))
             .WithChannel(channelName, channel => channel
                 .WithDescription(channelDescription)
-                .WithBinding(new HttpChannelBindingDefinition())
-                .WithParameter(channelParameterName, parameter => parameter
-                    .WithLocation(channelParameterLocation)
-                    .WithDescription(channelParameterDescription)
-                    .WithSchema(channelParameterSchema)))
-            .WithReceiveOperation(publish => publish
+            .WithMessage("licensedefinition-msg", message => message
+                 .WithPayloadOfType<LicenseDefinition>())
+            .WithMessage("contactdefinition-msg", message => message
+                 .WithPayloadOfType<ContactDefinition>())
+            .WithBinding(new HttpChannelBindingDefinition())
+            .WithParameter(channelParameterName, parameter => parameter
+                .WithLocation(channelParameterLocation)
+                .WithDescription(channelParameterDescription)
+                .WithSchema(channelParameterSchema)))
+            .WithReceiveOperation(receive => receive
                 .WithOperationId(receiveOperationId)
                 .WithDescription(receiveOperationDescription)
                 .WithSummary(receiveOperationSummary)
                 .WithBinding(new HttpOperationBindingDefinition())
-                .WithMessage(message => message
-                    .WithPayloadOfType<LicenseDefinition>()))
-            .WithSendOperation(subscribe => subscribe
+                .WithReferenceToChannelDefinition(channelName)
+                .WithReferenceToMessageDefinition("licensedefinition-msg"))
+            .WithSendOperation(send => send
                 .WithOperationId(sendOperationId)
                 .WithDescription(sendOperationDescription)
                 .WithSummary(sendOperationSummary)
                 .WithBinding(new HttpOperationBindingDefinition())
-                .WithMessages
-                (
-                    message1 => message1.WithPayloadOfType<LicenseDefinition>(),
-                    message2 => message2.WithPayloadOfType<ContactDefinition>()
-                ))
+                .WithReferenceToChannelDefinition(channelName)
+                .WithReferenceToMessageDefinition("licensedefinition-msg"))
             .WithTag(tag => tag
                 .WithName(tagName)
                 .WithDescription(tagDescription)
@@ -167,19 +168,21 @@ public class FluentBuilderTests
         var channel = document.Channels!.SingleOrDefault();
         channel.Should().NotBeNull();
         channel.Key.Should().Be(channelName);
+        channel.Value.Messages.Should().NotBeNull();
+        channel.Value.Messages.Should().HaveCount(2);
         var operations = document.Operations.Values;
         operations.Should().HaveCount(2);
         var receiveOperation = operations.SingleOrDefault(o => o.OperationId == receiveOperationId);
         receiveOperation.Should().NotBeNull();
         receiveOperation!.Description.Should().Be(receiveOperationDescription);
         receiveOperation.Summary.Should().Be(receiveOperationSummary);
-        receiveOperation.Message.Should().NotBeNull();
+        receiveOperation.Messages.Should().NotBeNull();
         var sendOperation = operations.SingleOrDefault(o => o.OperationId == sendOperationId);
         sendOperation.Should().NotBeNull();
         sendOperation!.Description.Should().Be(sendOperationDescription);
         sendOperation.Summary.Should().Be(sendOperationSummary);
-        sendOperation.Message.Should().NotBeNull();
-        sendOperation.Message!.OneOf.Should().HaveCountGreaterThan(1);
+        sendOperation.Messages.Should().NotBeNull();
+        sendOperation.Messages.Should().HaveCount(1);
         channel.Value.Bindings.Should().NotBeNull();
         channel.Value.Bindings!.Http.Should().NotBeNull();
 
