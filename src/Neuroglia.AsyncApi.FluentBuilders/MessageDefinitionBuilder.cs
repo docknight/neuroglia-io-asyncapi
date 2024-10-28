@@ -38,6 +38,17 @@ public class MessageDefinitionBuilder(IServiceProvider serviceProvider, IEnumera
     }
 
     /// <inheritdoc/>
+    public virtual IMessageDefinitionBuilder WithMultiFormatSchema<TPayload>(string schemaFormat)
+    {
+        this.Trait.Payload = new MultiFormatSchemaObjectDefinition
+            { 
+                Schema = new JsonSchemaBuilder().FromType<TPayload>(JsonSchemaGeneratorConfiguration.Default), 
+                SchemaFormat = schemaFormat 
+            };
+        return this;
+    }
+
+    /// <inheritdoc/>
     public virtual IMessageDefinitionBuilder WithPayloadSchema(JsonSchema payloadSchema)
     {
         ArgumentNullException.ThrowIfNull(payloadSchema);

@@ -145,13 +145,6 @@ public abstract class MessageTraitDefinitionBuilder<TBuilder, TTrait>
     }
 
     /// <inheritdoc/>
-    public virtual TBuilder WithSchemaFormat(string schemaFormat)
-    {
-        this.Trait.SchemaFormat = schemaFormat;
-        return (TBuilder)(object)this;
-    }
-
-    /// <inheritdoc/>
     public virtual TBuilder WithSummary(string summary)
     {
         this.Trait.Summary = summary;

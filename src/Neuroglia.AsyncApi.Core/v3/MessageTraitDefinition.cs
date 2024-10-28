@@ -37,59 +37,51 @@ public record MessageTraitDefinition
     public virtual CorrelationIdDefinition? CorrelationId { get; set; }
 
     /// <summary>
-    /// Gets/sets a string containing the name of the schema format used to define the message payload. 
-    /// If omitted, implementations should parse the payload as a <see cref="JsonSchema"/>.
-    /// When the payload is defined using a $ref to a remote file, it is RECOMMENDED the schema format includes the file encoding type to allow implementations to parse the file correctly. E.g., adding +yaml if content type is application/vnd.apache.avro results in application/vnd.apache.avro+yaml.
-    /// </summary>
-    [DataMember(Order = 3, Name = "schemaFormat"), JsonPropertyOrder(3), JsonPropertyName("schemaFormat"), YamlMember(Order = 3, Alias = "schemaFormat")]
-    public virtual string? SchemaFormat { get; set; }
-
-    /// <summary>
     /// Gets/sets the content type to use when encoding/decoding a message's payload. The value MUST be a specific media type (e.g. application/json). When omitted, the value MUST be the one specified on the <see cref="AsyncApiDocument.DefaultContentType"/> property.
     /// </summary>
-    [DataMember(Order = 4, Name = "contentType"), JsonPropertyOrder(4), JsonPropertyName("contentType"), YamlMember(Order = 4, Alias = "contentType")]
+    [DataMember(Order = 3, Name = "contentType"), JsonPropertyOrder(3), JsonPropertyName("contentType"), YamlMember(Order = 3, Alias = "contentType")]
     public virtual string? ContentType { get; set; }
 
     /// <summary>
     /// Gets/sets a machine-friendly name for the message.
     /// </summary>
-    [DataMember(Order = 5, Name = "name"), JsonPropertyOrder(5), JsonPropertyName("name"), YamlMember(Order = 5, Alias = "name")]
+    [DataMember(Order = 4, Name = "name"), JsonPropertyOrder(4), JsonPropertyName("name"), YamlMember(Order = 4, Alias = "name")]
     public virtual string? Name { get; set; }
 
     /// <summary>
     /// Gets/sets a human-friendly title for the message.
     /// </summary>
-    [DataMember(Order = 6, Name = "title"), JsonPropertyOrder(6), JsonPropertyName("title"), YamlMember(Order = 6, Alias = "title")]
+    [DataMember(Order = 5, Name = "title"), JsonPropertyOrder(5), JsonPropertyName("title"), YamlMember(Order = 5, Alias = "title")]
     public virtual string? Title { get; set; }
 
     /// <summary>
     /// Gets/sets a short summary of what the message is about.
     /// </summary>
-    [DataMember(Order = 7, Name = "summary"), JsonPropertyOrder(7), JsonPropertyName("summary"), YamlMember(Order = 7, Alias = "summary")]
+    [DataMember(Order = 6, Name = "summary"), JsonPropertyOrder(6), JsonPropertyName("summary"), YamlMember(Order = 6, Alias = "summary")]
     public virtual string? Summary { get; set; }
 
     /// <summary>
     /// Gets/sets an optional description of the message. <see href="https://spec.commonmark.org/">CommonMark</see> syntax can be used for rich text representation.
     /// </summary>
-    [DataMember(Order = 8, Name = "description"), JsonPropertyOrder(8), JsonPropertyName("description"), YamlMember(Order = 8, Alias = "description")]
+    [DataMember(Order = 7, Name = "description"), JsonPropertyOrder(7), JsonPropertyName("description"), YamlMember(Order = 7, Alias = "description")]
     public virtual string? Description { get; set; }
 
     /// <summary>
     /// gets/sets a <see cref="EquatableList{T}"/> of tags for API documentation control. Tags can be used for logical grouping of operations.
     /// </summary>
-    [DataMember(Order = 9, Name = "tags"), JsonPropertyOrder(9), JsonPropertyName("tags"), YamlMember(Order = 9, Alias = "tags")]
+    [DataMember(Order = 8, Name = "tags"), JsonPropertyOrder(8), JsonPropertyName("tags"), YamlMember(Order = 8, Alias = "tags")]
     public virtual EquatableList<TagDefinition>? Tags { get; set; }
 
     /// <summary>
     /// Gets/sets an object containing additional external documentation for this message.
     /// </summary>
-    [DataMember(Order = 10, Name = "externalDocs"), JsonPropertyOrder(10), JsonPropertyName("externalDocs"), YamlMember(Order = 10, Alias = "externalDocs")]
+    [DataMember(Order = 9, Name = "externalDocs"), JsonPropertyOrder(9), JsonPropertyName("externalDocs"), YamlMember(Order = 9, Alias = "externalDocs")]
     public virtual ExternalDocumentationDefinition? ExternalDocs { get; set; }
 
     /// <summary>
     /// Gets/sets an object used to configure the <see cref="MessageTraitDefinition"/>'s <see cref="IMessageBindingDefinition"/>s
     /// </summary>
-    [DataMember(Order = 11, Name = "bindings"), JsonPropertyOrder(11), JsonPropertyName("bindings"), YamlMember(Order = 11, Alias = "bindings")]
+    [DataMember(Order = 10, Name = "bindings"), JsonPropertyOrder(10), JsonPropertyName("bindings"), YamlMember(Order = 10, Alias = "bindings")]
     public virtual MessageBindingDefinitionCollection? Bindings { get; set; }
 
     /// <summary>
@@ -97,7 +89,7 @@ public record MessageTraitDefinition
     /// Values MUST contain examples that validate against the headers or payload fields, respectively. 
     /// Example MAY also have the name and summary additional keys to provide respectively a machine-friendly name and a short summary of what the example is about.
     /// </summary>
-    [DataMember(Order = 12, Name = "examples"), JsonPropertyOrder(12), JsonPropertyName("examples"), YamlMember(Order = 12, Alias = "examples")]
+    [DataMember(Order = 11, Name = "examples"), JsonPropertyOrder(11), JsonPropertyName("examples"), YamlMember(Order = 11, Alias = "examples")]
     public virtual EquatableDictionary<string, object>? Examples { get; set; }
 
     /// <inheritdoc/>

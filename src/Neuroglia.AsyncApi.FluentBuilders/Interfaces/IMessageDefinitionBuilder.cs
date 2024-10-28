@@ -42,6 +42,14 @@ public interface IMessageDefinitionBuilder
     IMessageDefinitionBuilder WithPayloadOfType(Type payloadType);
 
     /// <summary>
+    /// Configures the <see cref="MessageDefinition"/> to build to use the specified payload
+    /// </summary>
+    /// <param name="schemaFormat">A string containing the name of the schema format that is used to define the information. 
+    /// If schemaFormat is missing, it MUST default to application/vnd.aai.asyncapi+json;version={{asyncapi}} where {{asyncapi}} matches the AsyncAPI Version String. 
+    /// In such a case, this would make the Multi Format Schema Object equivalent to the Schema Object.</param>
+    IMessageDefinitionBuilder WithMultiFormatSchema<TPayload>(string schemaFormat);
+
+    /// <summary>
     /// Configures the <see cref="MessageDefinition"/> to build to use the specified <see cref="MessageTraitDefinition"/>
     /// </summary>
     /// <param name="setup">An <see cref="Action{T}"/> used to setup the <see cref="MessageTraitDefinition"/> to use</param>

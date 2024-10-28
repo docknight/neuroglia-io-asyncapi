@@ -62,13 +62,6 @@ public interface IMessageTraitDefinitionBuilder<TBuilder, TTrait>
     TBuilder WithCorrelationId(Action<IRuntimeExpressionBuilder> locationSetup, string? description = null);
 
     /// <summary>
-    /// Configures the <see cref="MessageTraitDefinition"/> to build to use the specified schema format
-    /// </summary>
-    /// <param name="schemaFormat">The schema format to use</param>
-    /// <returns>The configured <see cref="IMessageTraitDefinitionBuilder{TBuilder, TTrait}"/></returns>
-    TBuilder WithSchemaFormat(string schemaFormat);
-
-    /// <summary>
     /// Configures the <see cref="MessageTraitDefinition"/> to build to use the specified content type
     /// </summary>
     /// <param name="contentType">The content type to use</param>

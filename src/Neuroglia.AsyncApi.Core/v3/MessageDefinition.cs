@@ -22,8 +22,9 @@ public record MessageDefinition
 {
 
     /// <summary>
-    /// Gets/sets the definition of the message payload. It can be of any type but defaults to Schema object. It must match the <see cref="MessageTraitDefinition.SchemaFormat"/>, including encoding type - e.g Avro should be inlined as either a YAML or JSON object NOT a string to be parsed as YAML or JSON.
+    /// Gets/sets the definition of the message payload. It can be either Multi Format Schema Object, Schema Object or Reference Object. It must match the <see cref="MultiFormatSchemaObjectDefinition.SchemaFormat"/>, including encoding type - e.g Avro should be inlined as either a YAML or JSON object NOT a string to be parsed as YAML or JSON.
     /// </summary>
+    /// <remarks>If this is a Schema Object, then the schemaFormat will be assumed to be "application/vnd.aai.asyncapi+json;version=asyncapi" where the version is equal to the AsyncAPI Version String.</remarks>
     [DataMember(Order = 1, Name = "payload"), JsonPropertyOrder(1), JsonPropertyName("payload"), YamlMember(Order = 1, Alias = "payload")]
     public virtual object? Payload { get; set; }
 
