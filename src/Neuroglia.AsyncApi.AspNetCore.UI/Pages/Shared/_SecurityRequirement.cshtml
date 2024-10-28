@@ -1,6 +1,6 @@
 ﻿@model SecurityRequirementViewModel
 @{
-    var requirementName = this.Model.Key;
+    var requirementName = this.Model.Requirement?.Name;
     var scheme = this.Model.Document.Components?.SecuritySchemes?.FirstOrDefault(s => s.Key.Equals(requirementName, StringComparison.OrdinalIgnoreCase)).Value;
     var schemeType = scheme == null ? "undefined" : EnumHelper.Stringify(scheme.Type);
     var reference = $"{this.Model.ParentRef}_security_requirements_{requirementName}";

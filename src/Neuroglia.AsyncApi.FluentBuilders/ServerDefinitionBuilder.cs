@@ -94,12 +94,11 @@ public class ServerDefinitionBuilder(IServiceProvider serviceProvider, IEnumerab
     }
 
     /// <inheritdoc/>
-    public virtual IServerDefinitionBuilder WithSecurityRequirement(string name, object? requirement = null)
+    public virtual IServerDefinitionBuilder WithSecurityRequirement(SecuritySchemeDefinition requirement)
     {
-        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        requirement ??= new { };
+        ArgumentNullException.ThrowIfNull(requirement);
         this.Server.Security ??= [];
-        this.Server.Security.Add(name, requirement);
+        this.Server.Security.Add(requirement);
         return this;
     }
 

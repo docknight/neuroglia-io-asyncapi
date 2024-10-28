@@ -55,7 +55,7 @@
                     <div id="@(this.Model.Key)_security" class="card-body m-0 p-0 collapse show">
                         @foreach (var securityRequirement in server.Security)
                         {
-                            <partial name="_SecurityRequirement" model="new SecurityRequirementViewModel(this.Model.Document, this.Model.Key, securityRequirement.Key, securityRequirement.Value)" />
+                            <partial name="_SecurityRequirement" model="new SecurityRequirementViewModel(this.Model.Document, this.Model.Key, securityRequirement)" />
                         }
                     </div>
                 </div>

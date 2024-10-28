@@ -62,7 +62,7 @@ builder.Services.AddAsyncApiDocument(document => document
         .WithHost("streetlights.fake.com")
         .WithProtocol(AsyncApiProtocol.Https, "2.0")
         .WithBinding(new HttpServerBindingDefinition())
-        .WithSecurityRequirement("oauth2"))
+        .WithSecurityRequirement(new SecuritySchemeDefinition { Type = SecuritySchemeType.HttpApiKey, Name = "api_key", In = HttpApiKeyLocation.Header }))
     .WithChannel("/events", channel => channel
         .WithDescription("The endpoint used to publish and subscribe to cloud events")
         .WithBinding(new HttpChannelBindingDefinition())

@@ -21,7 +21,7 @@ public record SecurityRequirementViewModel
 {
 
     /// <inheritdoc/>
-    public SecurityRequirementViewModel(AsyncApiDocument document, string parentRef, string key, object? requirement) : base(document) { this.ParentRef = parentRef; this.Key = key; this.Requirement = requirement; }
+    public SecurityRequirementViewModel(AsyncApiDocument document, string parentRef, SecuritySchemeDefinition? requirement) : base(document) { this.ParentRef = parentRef; this.Requirement = requirement; }
 
     /// <summary>
     /// Gets a reference to the requirement's parent component
@@ -29,13 +29,8 @@ public record SecurityRequirementViewModel
     public string ParentRef { get; }
 
     /// <summary>
-    /// Gets the name of the required security scheme
-    /// </summary>
-    public string Key { get; }
-
-    /// <summary>
     /// Gets an object, if any, used to configure the security requirement
     /// </summary>
-    public object? Requirement { get; }
+    public SecuritySchemeDefinition? Requirement { get; }
 
 }

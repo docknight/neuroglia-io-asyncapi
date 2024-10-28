@@ -72,7 +72,7 @@ public record ServerDefinition
     /// Only one of the security requirement objects need to be satisfied to authorize a connection or operation. 
     /// </summary>
     [DataMember(Order = 7, Name = "security"), JsonPropertyOrder(7), JsonPropertyName("security"), YamlMember(Order = 7, Alias = "security")]
-    public virtual EquatableDictionary<string, object>? Security { get; set; }
+    public virtual EquatableList<SecuritySchemeDefinition>? Security { get; set; }
 
     /// <summary>
     /// Gets/sets an object used to configure the <see cref="ServerDefinition"/>'s <see cref="IServerBindingDefinition"/>s
