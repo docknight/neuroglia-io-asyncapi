@@ -26,7 +26,7 @@ public record MqttServerBindingDefinition
     /// <summary>
     /// Gets/sets the client identifier.
     /// </summary>
-    [DataMember(Order = 1, Name = "qos"), JsonPropertyOrder(1), JsonPropertyName("qos"), YamlMember(Order = 1, Alias = "qos")]
+    [DataMember(Order = 1, Name = "clientId"), JsonPropertyOrder(1), JsonPropertyName("clientId"), YamlMember(Order = 1, Alias = "clientId")]
     public virtual string? ClientId { get; set; }
 
     /// <summary>
@@ -48,9 +48,9 @@ public record MqttServerBindingDefinition
     public virtual bool KeepAlive { get; set; }
 
     /// <summary>
-    /// Gets/sets the version of this binding. Defaults to 'latest'.
+    /// Gets/sets the version of this binding. Defaults to '0.2.0'.
     /// </summary>
     [DataMember(Order = 5, Name = "bindingVersion"), JsonPropertyOrder(5), JsonPropertyName("bindingVersion"), YamlMember(Order = 5, Alias = "bindingVersion")]
-    public virtual string BindingVersion { get; set; } = "latest";
+    public virtual string BindingVersion { get; set; } = "0.2.0";
 
 }
