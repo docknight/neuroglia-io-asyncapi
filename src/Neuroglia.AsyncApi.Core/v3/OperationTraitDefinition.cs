@@ -59,6 +59,13 @@ public record OperationTraitDefinition
     [DataMember(Order = 6, Name = "bindings"), JsonPropertyOrder(6), JsonPropertyName("bindings"), YamlMember(Order = 6, Alias = "bindings")]
     public virtual OperationBindingDefinitionCollection? Bindings { get; set; }
 
+    /// <summary>
+    /// Gets/sets the definition of the reply in a request-reply operation.
+    /// </summary>
+    [DataMember(Order = 7, Name = "reply"), JsonPropertyOrder(7), JsonPropertyName("reply"), YamlMember(Order = 7, Alias = "reply")]
+    public virtual OperationReplyDefinition? Reply { get; set; }
+
+
     /// <inheritdoc/>
     public override string ToString() => Title ?? base.ToString();
 

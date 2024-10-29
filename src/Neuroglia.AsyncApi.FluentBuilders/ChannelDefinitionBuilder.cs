@@ -44,6 +44,13 @@ public class ChannelDefinitionBuilder(IServiceProvider serviceProvider, IEnumera
     protected virtual ChannelDefinition Channel { get; } = new();
 
     /// <inheritdoc/>
+    public virtual IChannelDefinitionBuilder WithAddress(string address)
+    {
+        this.Channel.Address = address;
+        return this;
+    }
+
+    /// <inheritdoc/>
     public virtual IChannelDefinitionBuilder WithDescription(string? description)
     {
         this.Channel.Description = description;

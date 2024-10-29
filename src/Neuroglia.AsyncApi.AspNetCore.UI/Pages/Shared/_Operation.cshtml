@@ -7,6 +7,7 @@
     // var jsonPayload = message?.Payload == null ? null : this.Serializer.SerializeToText(message?.Payload);
     // var schema = string.IsNullOrWhiteSpace(jsonPayload) ? null : JsonSchema.FromText(jsonPayload);
     var operationRef = $"{this.Model.OperationId!.ToLowerInvariant()}-{EnumHelper.Stringify(actionType).ToLowerInvariant()}";
+    var channel = this.Model.Document.DereferenceChannelDefinitionForOperation(operation);
 
     var badgeColor = actionType == ActionType.Receive ? "info" : "info";
     var badgeTooltip = actionType == ActionType.Send ? "An operation used to publish a message to the specified channel." : "An operation used to subscribe to messages from the specified channel.";
@@ -91,6 +92,50 @@
                     }
                 </div>
             </div>
+
+            @if (operation.Reply != null)
+            {
+                var replyMessageDefinitions = this.Model.Document.DereferenceMessageDefinitionsForReplyOperation(operation);
+                <div class="card border-0">
+                    <a data-bs-toggle="collapse" href="#@(operationRef)_reply" role="button" aria-expanded="false">
+                        <div class="card-header bg-transparent">
+                            <span class="font-weight-bold text-secondary">Reply Information</span>
+                        </div>
+                    </a>
+                    <div id="@(operationRef)_replyinfo" class="card-body p-0 m-0 collapse show">
+                        <p class="m-3">REPLY CHANNEL INFORMATION</p>
+                        <p class="fst-italic m-3">Reply will be provided via this designated address: <span class="badge rounded-pill border border-secondary text-secondary" title="@channel?.Address">@channel?.Address</span></p>
+
+                        <div class="card border-0">
+                            <a data-bs-toggle="collapse" href="#@(operationRef)_replymessage" role="button" aria-expanded="false">
+                                <div class="card-header bg-transparent">
+                                    <span class="font-weight-bold text-secondary">Expected Reply Message</span>
+                                </div>
+                            </a>
+                            <div id="@(operationRef)_replymessages" class="card-body p-0 m-0 collapse show">
+                                @if (replyMessageDefinitions == null || !replyMessageDefinitions.Any())
+                                {
+                                    <p class="alert alert-warning fst-italic m-3">No reply message has been defined for the operation.</p>
+                                }
+                                else if (replyMessageDefinitions.Count == 1)
+                                {
+                                    <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, 0, operationRef, replyMessageDefinitions.Single())" />
+                                }
+                                else
+                                {
+                                    int index = 1;
+                                    foreach (var messageOption in replyMessageDefinitions)
+                                    {
+                                        <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, index, operationRef, messageOption)" />
+                                        index++;
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
 
         </div>
     </div>

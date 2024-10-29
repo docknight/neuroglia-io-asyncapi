@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Neuroglia.AsyncApi.FluentBuilders.Interfaces;
 using Neuroglia.AsyncApi.v3;
 using Neuroglia.AsyncApi.v3.Bindings;
 
@@ -68,6 +69,13 @@ public interface IOperationTraitDefinitionBuilder<TBuilder, TTrait>
     /// <param name="binding">The <see cref="IOperationBindingDefinition"/> to add</param>
     /// <returns>The configured <see cref="IOperationTraitDefinitionBuilder{TBuilder, TTrait}"/></returns>
     TBuilder WithBinding(IOperationBindingDefinition binding);
+
+    /// <summary>
+    /// Marks the <see cref="OperationTraitDefinition"/> to build with the specified reply definition.
+    /// </summary>
+    /// <param name="setup">An <see cref="Action{T}"/> used to setup the reply definition to use</param>
+    /// <returns>The configured <see cref="IOperationTraitDefinitionBuilder{TBuilder, TTrait}"/></returns>
+    TBuilder WithReply(Action<IOperationReplyDefinitionBuilder> setup);
 
     /// <summary>
     /// Builds a new <see cref="OperationTraitDefinition"/>

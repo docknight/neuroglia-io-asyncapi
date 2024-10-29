@@ -151,6 +151,39 @@ public record AsyncApiDocument
         return messages;
     }
 
+    public virtual List<MessageDefinition> DereferenceMessageDefinitionsForReplyOperation(OperationDefinition operation)
+    {
+        if (operation == null)
+        {
+            throw new ArgumentNullException(nameof(operation));
+        }
+
+        var messages = new List<MessageDefinition>();
+        var channel = this.DereferenceChannelDefinitionForOperation(operation);
+        if (channel == null)
+        {
+            throw new InvalidOperationException($"Channel not found for operation {operation.Title ?? operation.Summary}.");
+        }
+
+        if (operation.Reply?.Messages == null || !operation.Reply.Messages.Any() || channel.Messages == null)
+        {
+            return messages;
+        }
+
+        foreach (var message in operation.Reply.Messages)
+        {
+            if (message.Reference != null)
+            {
+                if (channel.Messages.TryGetValue(message.Reference.Substring(message.Reference.LastIndexOf("/") + 1), out MessageDefinition? referencedMessage))
+                {
+                    messages.Add(referencedMessage);
+                }
+            }
+        }
+
+        return messages;
+    }
+
     public virtual ChannelDefinition? DereferenceChannelDefinitionForOperation(OperationDefinition operation)
     {
         if (operation == null)

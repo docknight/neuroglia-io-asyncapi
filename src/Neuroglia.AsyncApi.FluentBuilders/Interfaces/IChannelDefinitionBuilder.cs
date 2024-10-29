@@ -23,6 +23,13 @@ public interface IChannelDefinitionBuilder
 {
 
     /// <summary>
+    /// Configures the <see cref="ChannelDefinition"/> to build to use the specified address.
+    /// </summary>
+    /// <param name="address">The <see cref="ChannelDefinition"/>'s address (typically the "topic name", "routing key", "event type", or "path").</param>
+    /// <returns>The configured <see cref="IChannelDefinitionBuilder"/></returns>
+    IChannelDefinitionBuilder WithAddress(string address);
+
+    /// <summary>
     /// Configures the <see cref="ChannelDefinition"/> to build to use the specified description
     /// </summary>
     /// <param name="description">The <see cref="ChannelDefinition"/>'s description</param>

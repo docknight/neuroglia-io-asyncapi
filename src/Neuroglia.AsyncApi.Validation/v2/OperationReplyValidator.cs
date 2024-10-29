@@ -14,22 +14,20 @@
 namespace Neuroglia.AsyncApi.Validation;
 
 /// <summary>
-/// Represents the service used to validate <see cref="OperationTraitDefinition"/>s
+/// Represents the service used to validate <see cref="OperationReplyDefinition"/>s
 /// </summary>
-public class OperationTraitValidator
-    : AbstractValidator<OperationTraitDefinition>
+public class OperationReplyValidator : AbstractValidator<OperationReplyDefinition>
 {
-
     /// <summary>
-    /// Initializes a new <see cref="OperationTraitValidator"/>
+    /// Initializes a new <see cref="OperationReplyValidator"/>
     /// </summary>
-    public OperationTraitValidator()
+    public OperationReplyValidator()
     {
-        this.RuleForEach(o => o.Tags)
-            .SetValidator(new TagValidator());
-        this.RuleFor(o => o.Reply)
-            .SetValidator(new OperationReplyValidator())
-            .When(o => o.Reply != null);
+        this.RuleFor(o => o.Channel).NotNull()
+            .When(o => o.Reference == null);
+        this.RuleFor(o => o.Address!.Location).NotEmpty()
+            .When(o => o.Reference == null && o.Address != null);
+        this.RuleFor(o => o.Reference).Null()
+            .When(o => o.Channel != null || o.Address != null);
     }
-
 }

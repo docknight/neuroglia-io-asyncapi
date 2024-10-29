@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Neuroglia.AsyncApi.FluentBuilders.Interfaces;
 using Neuroglia.AsyncApi.v3;
 using Neuroglia.AsyncApi.v3.Bindings;
 
@@ -99,6 +100,16 @@ public abstract class OperationTraitDefinitionBuilder<TBuilder, TTrait>
     public virtual TBuilder WithTitle(string title)
     {
         this.Trait.Title = title;
+        return (TBuilder)(object)this;
+    }
+
+    /// <inheritdoc/>
+    public virtual TBuilder WithReply(Action<IOperationReplyDefinitionBuilder> setup)
+    {
+        ArgumentNullException.ThrowIfNull(setup);
+        var builder = ActivatorUtilities.CreateInstance<OperationReplyDefinitionBuilder>(this.ServiceProvider);
+        setup(builder);
+        this.Trait.Reply = builder.Build();
         return (TBuilder)(object)this;
     }
 
