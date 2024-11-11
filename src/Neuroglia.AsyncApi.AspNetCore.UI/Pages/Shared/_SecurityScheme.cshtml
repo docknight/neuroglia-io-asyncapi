@@ -100,5 +100,18 @@
             </div>
         </div>
     }
+    @if (scheme.Scopes != null && scheme.Scopes.AsEnumerable().Any())
+    {
+        <div class="row">
+            <div class="col-2">
+                <small class="text-secondary">Scopes</small>
+                <small class="bi bi-info-circle text-secondary ms-1" role="button" title="List of the needed scope names."></small>
+            </div>
+            <div class="col-2">
+                <small class="badge border border-muted text-secondary">@string.Join(",", scheme.Scopes)</small>
+            </div>
+        </div>
+    }
+
 
 </div>

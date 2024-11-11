@@ -81,6 +81,18 @@ public record ServerDefinition
     public virtual ServerBindingDefinitionCollection? Bindings { get; set; }
 
     /// <summary>
+    /// Gets/sets a human-friendly title for the server.
+    /// </summary>
+    [DataMember(Order = 9, Name = "title"), JsonPropertyOrder(9), JsonPropertyName("title"), YamlMember(Order = 9, Alias = "title")]
+    public virtual string? Title { get; set; }
+
+    /// <summary>
+    /// Gets/sets a short summary of the server.
+    /// </summary>
+    [DataMember(Order = 10, Name = "summary"), JsonPropertyOrder(10), JsonPropertyName("summary"), YamlMember(Order = 10, Alias = "summary")]
+    public virtual string? Summary { get; set; }
+
+    /// <summary>
     /// Interpolates the defined server's url variables
     /// </summary>
     /// <returns>The interpolated server url</returns>

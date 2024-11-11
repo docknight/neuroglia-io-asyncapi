@@ -70,6 +70,12 @@ public record SecuritySchemeDefinition
     [DataMember(Order = 8, Name = "openIdConnectUrl"), JsonPropertyOrder(8), JsonPropertyName("openIdConnectUrl"), YamlMember(Order = 8, Alias = "openIdConnectUrl")]
     public virtual Uri? OpenIdConnectUrl { get; set; }
 
+    /// <summary>
+    /// Gets/sets a list of the needed scope names. An empty array means no scopes are needed.
+    /// </summary>
+    [DataMember(Order = 9, Name = "scopes"), JsonPropertyOrder(9), JsonPropertyName("scopes"), YamlMember(Order = 9, Alias = "scopes")]
+    public virtual EquatableList<string>? Scopes { get; set; }
+
     /// <inheritdoc/>
     public override string ToString() => EnumHelper.Stringify(Type);
 

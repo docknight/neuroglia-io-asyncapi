@@ -97,6 +97,20 @@ public class ChannelDefinitionBuilder(IServiceProvider serviceProvider, IEnumera
     }
 
     /// <inheritdoc/>
+    public virtual IChannelDefinitionBuilder WithTitle(string? title)
+    {
+        this.Channel.Title = title;
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public virtual IChannelDefinitionBuilder WithSummary(string? summary)
+    {
+        this.Channel.Summary = summary;
+        return this;
+    }
+
+    /// <inheritdoc/>
     public virtual ChannelDefinition Build()
     {
         var validationResults = this.Validators.Select(v => v.Validate(this.Channel));

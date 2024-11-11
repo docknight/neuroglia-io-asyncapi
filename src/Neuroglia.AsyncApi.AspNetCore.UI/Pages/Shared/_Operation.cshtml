@@ -8,6 +8,7 @@
     // var schema = string.IsNullOrWhiteSpace(jsonPayload) ? null : JsonSchema.FromText(jsonPayload);
     var operationRef = $"{this.Model.OperationId!.ToLowerInvariant()}-{EnumHelper.Stringify(actionType).ToLowerInvariant()}";
     var channel = this.Model.Document.DereferenceChannelDefinitionForOperation(operation);
+    var channelRef = operation.Channel.Reference.Replace("#", string.Empty).Replace("/", "_");
 
     var badgeColor = actionType == ActionType.Receive ? "info" : "info";
     var badgeTooltip = actionType == ActionType.Send ? "An operation used to publish a message to the specified channel." : "An operation used to subscribe to messages from the specified channel.";
@@ -23,7 +24,7 @@
                     <div class="col-md-6">
                         <span class="badge border me-2 border-@badgeColor text-@badgeColor" title="@badgeTooltip">@badgeText</span>
                         <span class="h5 text-secondary">@this.Model.OperationId</span>
-                        <small class="font-italic text-muted ms-1"> [@this.Model.ChannelKey]</small>
+                        <small class="font-italic text-muted ms-1"> [@(channel?.Title ?? this.Model.ChannelKey)]</small>
                     </div>
                     <div class="col-md-6 text-end">
                         @if (operation.Tags != null)
@@ -46,9 +47,30 @@
             }
 
             <div class="card border-0">
+                <a data-bs-toggle="collapse" href="#@(channelRef)_bindings" role="button" aria-expanded="false">
+                    <div class="card-header bg-transparent">
+                        <span class="font-weight-bold text-secondary">Channel Bindings</span>
+                    </div>
+                </a>
+                <div id="@(channelRef)_bindings" class="card-body m-0 p-0 collapse show">
+                    @if (channel?.Bindings == null || !channel.Bindings.AsEnumerable().Any())
+                    {
+                        <p class="alert alert-warning fst-italic my-3">No bindings defined.</p>
+                    }
+                    else
+                    {
+                        @foreach (var binding in channel.Bindings.AsEnumerable())
+                        {
+                            <partial name="_Binding" model="new BindingDefinitionViewModel(this.Model.Document, binding, channelRef)" />
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="card border-0">
                 <a data-bs-toggle="collapse" href="#@(operationRef)_bindings" role="button" aria-expanded="false">
                     <div class="card-header bg-transparent">
-                        <span class="font-weight-bold text-secondary">Bindings</span>
+                        <span class="font-weight-bold text-secondary">Operation Bindings</span>
                     </div>
                 </a>
                 <div id="@(operationRef)_bindings" class="card-body m-0 p-0 collapse show">
@@ -79,7 +101,7 @@
                     }
                     else if (messages.Count == 1)
                     {
-                        <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, 0, operationRef, messages.Single())" />
+                        <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, 1, operationRef, messages.Single())" />
                     }
                     else
                     {
@@ -96,18 +118,28 @@
             @if (operation.Reply != null)
             {
                 var replyMessageDefinitions = this.Model.Document.DereferenceMessageDefinitionsForReplyOperation(operation);
-                <div class="card border-0">
+                <div class="card my-3">
                     <a data-bs-toggle="collapse" href="#@(operationRef)_reply" role="button" aria-expanded="false">
                         <div class="card-header bg-transparent">
                             <span class="font-weight-bold text-secondary">Reply Information</span>
                         </div>
                     </a>
-                    <div id="@(operationRef)_replyinfo" class="card-body p-0 m-0 collapse show">
+                    <div id="@(operationRef)_reply" class="card-body p-0 m-0 collapse">
                         <p class="m-3">REPLY CHANNEL INFORMATION</p>
                         <p class="fst-italic m-3">Reply will be provided via this designated address: <span class="badge rounded-pill border border-secondary text-secondary" title="@channel?.Address">@channel?.Address</span></p>
+                        @if (!string.IsNullOrWhiteSpace(operation.Reply.Address?.Location))
+                        {
+                            <p class="m-3">REPLY ADDRESS INFORMATION</p>
+                            <p class="fst-italic m-3">Reply will be sent to the address provided in: <span class="badge rounded-pill border border-secondary text-secondary" title="@operation.Reply.Address.Location">@operation.Reply.Address.Location</span>
+                                @if (!string.IsNullOrWhiteSpace(operation.Reply.Address?.Description))
+                                {
+                                    <div class="m-3"><small class="text-secondary">@operation.Reply.Address.Description</small></div>
+                                }
+                            </p>
+                        }
 
-                        <div class="card border-0">
-                            <a data-bs-toggle="collapse" href="#@(operationRef)_replymessage" role="button" aria-expanded="false">
+                        <div class="card border-0 m-3">
+                            <a data-bs-toggle="collapse" href="#@(operationRef)_replymessages" role="button" aria-expanded="false">
                                 <div class="card-header bg-transparent">
                                     <span class="font-weight-bold text-secondary">Expected Reply Message</span>
                                 </div>
@@ -119,7 +151,7 @@
                                 }
                                 else if (replyMessageDefinitions.Count == 1)
                                 {
-                                    <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, 0, operationRef, replyMessageDefinitions.Single())" />
+                                    <partial name="_Message" model="new MessageDefinitionViewModel(this.Model.Document, 1, operationRef, replyMessageDefinitions.Single())" />
                                 }
                                 else
                                 {

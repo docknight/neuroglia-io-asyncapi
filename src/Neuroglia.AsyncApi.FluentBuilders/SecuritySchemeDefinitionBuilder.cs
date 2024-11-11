@@ -116,6 +116,13 @@ public class SecuritySchemeDefinitionBuilder(IServiceProvider serviceProvider, I
     }
 
     /// <inheritdoc/>
+    public virtual ISecuritySchemeDefinitionBuilder WithScopes(params string[] scopes)
+    {
+        this.SecurityScheme.Scopes = new EquatableList<string>(scopes ?? []);
+        return this;
+    }
+
+    /// <inheritdoc/>
     public virtual SecuritySchemeDefinition Build()
     {
         var validationResults = this.Validators.Select(v => v.Validate(this.SecurityScheme));

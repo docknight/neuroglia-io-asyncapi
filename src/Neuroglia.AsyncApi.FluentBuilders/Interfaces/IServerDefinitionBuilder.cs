@@ -52,6 +52,20 @@ public interface IServerDefinitionBuilder
     IServerDefinitionBuilder WithDescription(string? description);
 
     /// <summary>
+    /// Configures the <see cref="ServerDefinition"/> to use the specified title
+    /// </summary>
+    /// <param name="title">The title to use</param>
+    /// <returns>The configured <see cref="IServerDefinitionBuilder"/></returns>
+    IServerDefinitionBuilder WithTitle(string? title);
+
+    /// <summary>
+    /// Configures the <see cref="ServerDefinition"/> to use the specified summary
+    /// </summary>
+    /// <param name="summary">The summary to use</param>
+    /// <returns>The configured <see cref="IServerDefinitionBuilder"/></returns>
+    IServerDefinitionBuilder WithSummary(string? summary);
+
+    /// <summary>
     /// Adds the specified <see cref="VariableDefinition"/> to the <see cref="ServerDefinition"/> to build
     /// </summary>
     /// <param name="name">The name of the <see cref="VariableDefinition"/> to add</param>

@@ -107,8 +107,7 @@ public class FluentBuilderTests
             .WithBinding(new HttpChannelBindingDefinition())
             .WithParameter(channelParameterName, parameter => parameter
                 .WithLocation(channelParameterLocation)
-                .WithDescription(channelParameterDescription)
-                .WithSchema(channelParameterSchema)))
+                .WithDescription(channelParameterDescription)))
             .WithReceiveOperation(receiveOperationId, receive => receive
                 .WithDescription(receiveOperationDescription)
                 .WithSummary(receiveOperationSummary)
@@ -189,7 +188,6 @@ public class FluentBuilderTests
         parameter.Key.Should().Be(channelParameterName);
         parameter.Value.Location.Should().Be(channelParameterLocation);
         parameter.Value.Description.Should().Be(channelParameterDescription);
-        parameter.Value.Schema.Should().NotBeNull();
 
         var tag = document.Info.Tags!.SingleOrDefault();
         tag.Should().NotBeNull();

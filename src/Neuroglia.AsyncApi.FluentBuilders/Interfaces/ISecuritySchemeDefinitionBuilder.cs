@@ -78,6 +78,13 @@ public interface ISecuritySchemeDefinitionBuilder
     ISecuritySchemeDefinitionBuilder WithOAuthFlows(Action<IOAuthFlowDefinitionCollectionBuilder> setup);
 
     /// <summary>
+    /// Configures the <see cref="SecuritySchemeDefinition"/> to build to use the specified OAUTH scopes.
+    /// </summary>
+    /// <param name="scopes">List of the needed scope names. An empty array means no scopes are needed.</param>
+    /// <returns>The configured <see cref="ISecuritySchemeDefinitionBuilder"/></returns>
+    ISecuritySchemeDefinitionBuilder WithScopes(params string[] scopes);
+
+    /// <summary>
     /// Builds a new <see cref="SecuritySchemeDefinition"/>
     /// </summary>
     /// <returns>A new <see cref="SecuritySchemeDefinition"/></returns>

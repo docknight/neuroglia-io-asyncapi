@@ -74,6 +74,20 @@ public class ServerDefinitionBuilder(IServiceProvider serviceProvider, IEnumerab
     }
 
     /// <inheritdoc/>
+    public virtual IServerDefinitionBuilder WithTitle(string? title)
+    {
+        this.Server.Title = title;
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public virtual IServerDefinitionBuilder WithSummary(string? summary)
+    {
+        this.Server.Summary = summary;
+        return this;
+    }
+
+    /// <inheritdoc/>
     public virtual IServerDefinitionBuilder WithVariable(string name, Action<IVariableDefinitionBuilder> setup)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));

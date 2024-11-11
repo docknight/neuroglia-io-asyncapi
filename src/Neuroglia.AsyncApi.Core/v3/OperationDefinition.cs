@@ -43,6 +43,6 @@ public record OperationDefinition
     /// Gets/sets a reference to the channel for this operation.
     /// </summary>
     [DataMember(Order = 4, Name = "channel"), JsonPropertyOrder(4), JsonPropertyName("channel"), YamlMember(Order = 4, Alias = "channel")]
-    public virtual ReferenceableComponentDefinition? Channel { get; set; }
+    public virtual ReferenceableComponentDefinition Channel { get; set; }
 
 }

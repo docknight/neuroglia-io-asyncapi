@@ -60,6 +60,20 @@ public interface IChannelDefinitionBuilder
     IChannelDefinitionBuilder WithMessage(string? name, Action<IMessageDefinitionBuilder> setup);
 
     /// <summary>
+    /// Configures the <see cref="ChannelDefinition"/> to use the specified title
+    /// </summary>
+    /// <param name="title">The title to use</param>
+    /// <returns>The configured <see cref="IChannelDefinitionBuilder"/></returns>
+    IChannelDefinitionBuilder WithTitle(string? title);
+
+    /// <summary>
+    /// Configures the <see cref="ChannelDefinition"/> to use the specified summary
+    /// </summary>
+    /// <param name="summary">The summary to use</param>
+    /// <returns>The configured <see cref="IChannelDefinitionBuilder"/></returns>
+    IChannelDefinitionBuilder WithSummary(string? summary);
+
+    /// <summary>
     /// Builds a new <see cref="ChannelDefinition"/>
     /// </summary>
     /// <returns>A new <see cref="ChannelDefinition"/></returns>

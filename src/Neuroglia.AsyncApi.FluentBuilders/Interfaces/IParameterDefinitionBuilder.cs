@@ -22,27 +22,6 @@ public interface IParameterDefinitionBuilder
 {
 
     /// <summary>
-    /// Configures the type of the <see cref="ParameterDefinition"/> to build
-    /// </summary>
-    /// <typeparam name="TParameter">The type of the <see cref="ParameterDefinition"/> to build</typeparam>
-    /// <returns>The configured <see cref="IParameterDefinitionBuilder"/></returns>
-    IParameterDefinitionBuilder OfType<TParameter>();
-
-    /// <summary>
-    /// Configures the type of the <see cref="ParameterDefinition"/> to build
-    /// </summary>
-    /// <param name="parameterType">The type of the <see cref="ParameterDefinition"/> to build</param>
-    /// <returns>The configured <see cref="IParameterDefinitionBuilder"/></returns>
-    IParameterDefinitionBuilder OfType(Type parameterType);
-
-    /// <summary>
-    /// Configures the <see cref="JsonSchema"/> of the <see cref="ParameterDefinition"/> to build
-    /// </summary>
-    /// <param name="schema">The <see cref="JsonSchema"/> of the <see cref="ParameterDefinition"/> to build</param>
-    /// <returns>The configured <see cref="IParameterDefinitionBuilder"/></returns>
-    IParameterDefinitionBuilder WithSchema(JsonSchema schema);
-
-    /// <summary>
     /// Configures the <see cref="ParameterDefinition"/> to build to use the specified description
     /// </summary>
     /// <param name="description">The description to use</param>
@@ -55,6 +34,27 @@ public interface IParameterDefinitionBuilder
     /// <param name="location">A runtime expression that specifies the location of the parameter value</param>
     /// <returns>The configured <see cref="IParameterDefinitionBuilder"/></returns>
     IParameterDefinitionBuilder WithLocation(string location);
+
+    /// <summary>
+    /// Configures the <see cref="ParameterDefinition"/> to build to use the specified enums.
+    /// </summary>
+    /// <param name="enums">An enumeration of string values to be used if the substitution options are from a limited set.</param>
+    /// <returns>The configured <see cref="IParameterDefinitionBuilder"/></returns>
+    IParameterDefinitionBuilder WithEnum(params string[] enums);
+
+    /// <summary>
+    /// Configures the <see cref="ParameterDefinition"/> to build to use the specified examples
+    /// </summary>
+    /// <param name="examples">The examples to use</param>
+    /// <returns>The configured <see cref="IParameterDefinitionBuilder"/></returns>
+    IParameterDefinitionBuilder WithExamples(params string[] examples);
+
+    /// <summary>
+    /// Configures the <see cref="ParameterDefinition"/> to build to use the specified description
+    /// </summary>
+    /// <param name="default">The default value to use for substitution, and to send, if an alternate value is not supplied.</param>
+    /// <returns>The configured <see cref="IParameterDefinitionBuilder"/></returns>
+    IParameterDefinitionBuilder WithDefault(string @default);
 
     /// <summary>
     /// Builds a new <see cref="ParameterDefinition"/>

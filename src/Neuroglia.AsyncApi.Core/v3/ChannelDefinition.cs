@@ -53,4 +53,16 @@ public record ChannelDefinition
     [DataMember(Order = 5, Name = "bindings"), JsonPropertyOrder(5), JsonPropertyName("bindings"), YamlMember(Order = 5, Alias = "bindings")]
     public virtual ChannelBindingDefinitionCollection? Bindings { get; set; }
 
+    /// <summary>
+    /// Gets/sets a human-friendly title for the channel.
+    /// </summary>
+    [DataMember(Order = 6, Name = "title"), JsonPropertyOrder(6), JsonPropertyName("title"), YamlMember(Order = 6, Alias = "title")]
+    public virtual string? Title { get; set; }
+
+    /// <summary>
+    /// Gets/sets a short summary of the channel.
+    /// </summary>
+    [DataMember(Order = 7, Name = "summary"), JsonPropertyOrder(7), JsonPropertyName("summary"), YamlMember(Order = 7, Alias = "summary")]
+    public virtual string? Summary { get; set; }
+
 }

@@ -38,7 +38,7 @@ public class RuntimeExpression
     /// </summary>
     /// <param name="expression">The <see cref="RuntimeExpression"/>'s expression component (ex: 'message')</param>
     /// <param name="source">The <see cref="RuntimeExpression"/>'s source component (ex: 'header')</param>
-    /// <param name="fragment">The <see cref="RuntimeExpression"/>'s fragment component (ex: '#/property')</param>
+    /// <param name="fragment">The <see cref="RuntimeExpression"/>'s fragment component (ex: '/property')</param>
     public RuntimeExpression(string expression, RuntimeExpressionSource source, string fragment)
     {
         if (string.IsNullOrWhiteSpace(expression)) throw new ArgumentNullException(nameof(expression));
@@ -59,12 +59,12 @@ public class RuntimeExpression
     public virtual RuntimeExpressionSource Source { get; set; }
 
     /// <summary>
-    /// Gets/sets the <see cref="RuntimeExpression"/>'s fragment component (ex: '#/property')
+    /// Gets/sets the <see cref="RuntimeExpression"/>'s fragment component (ex: '/property')
     /// </summary>
     public virtual string Fragment { get; set; } = null!;
 
     /// <inheritdoc/>
-    public override string ToString() => $"{Expression}.{EnumHelper.Stringify(Source)}#{Fragment}";
+    public override string ToString() => $"${Expression}.{EnumHelper.Stringify(Source)}#{Fragment}";
 
     /// <summary>
     /// Parses the specified input

@@ -38,10 +38,22 @@ public record ParameterDefinition
     public virtual string? Description { get; set; }
 
     /// <summary>
-    /// Gets/sets the <see cref="ParameterDefinition"/>'s <see cref="JsonSchema"/>
+    /// Gets/sets an enumeration of string values to be used if the substitution options are from a limited set.
     /// </summary>
-    [DataMember(Order = 3, Name = "schema"), JsonPropertyOrder(3), JsonPropertyName("schema"), YamlMember(Order = 3, Alias = "schema")]
-    public virtual JsonSchema? Schema { get; set; }
+    [DataMember(Order = 3, Name = "enum"), JsonPropertyOrder(3), JsonPropertyName("enum"), YamlMember(Order = 3, Alias = "enum")]
+    public virtual EquatableList<string>? Enum { get; set; }
+
+    /// <summary>
+    /// Gets/sets an array of examples of the parameter value.
+    /// </summary>
+    [DataMember(Order = 4, Name = "examples"), JsonPropertyOrder(4), JsonPropertyName("examples"), YamlMember(Order = 4, Alias = "examples")]
+    public virtual EquatableList<string>? Examples { get; set; }
+
+    /// <summary>
+    /// Gets/sets a short description of the parameter. <see href="https://spec.commonmark.org/">CommonMark</see> syntax can be used for rich text representation.
+    /// </summary>
+    [DataMember(Order = 5, Name = "default"), JsonPropertyOrder(5), JsonPropertyName("default"), YamlMember(Order = 5, Alias = "default")]
+    public virtual string? Default { get; set; }
 
     private RuntimeExpression _LocationExpression = null!;
     /// <summary>

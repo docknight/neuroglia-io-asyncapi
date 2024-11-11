@@ -43,23 +43,6 @@ public class ParameterDefinitionBuilder(IServiceProvider serviceProvider, IEnume
     protected virtual ParameterDefinition Parameter { get; } = new();
 
     /// <inheritdoc/>
-    public virtual IParameterDefinitionBuilder OfType<TParameter>() => this.OfType(typeof(TParameter));
-
-    /// <inheritdoc/>
-    public virtual IParameterDefinitionBuilder OfType(Type parameterType)
-    {
-        ArgumentNullException.ThrowIfNull(parameterType);
-        return this.WithSchema(new JsonSchemaBuilder().FromType(parameterType, JsonSchemaGeneratorConfiguration.Default));
-    }
-
-    /// <inheritdoc/>
-    public virtual IParameterDefinitionBuilder WithSchema(JsonSchema schema)
-    {
-        this.Parameter.Schema = schema ?? throw new ArgumentNullException(nameof(schema));
-        return this;
-    }
-
-    /// <inheritdoc/>
     public virtual IParameterDefinitionBuilder WithDescription(string? description)
     {
         this.Parameter.Description = description;
@@ -71,6 +54,30 @@ public class ParameterDefinitionBuilder(IServiceProvider serviceProvider, IEnume
     {
         if (string.IsNullOrWhiteSpace(location)) throw new ArgumentNullException(nameof(location));
         this.Parameter.Location = location;
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public virtual IParameterDefinitionBuilder WithEnum(params string[] enums)
+    {
+        ArgumentNullException.ThrowIfNull(enums);
+        this.Parameter.Enum = new EquatableList<string>(enums);
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public virtual IParameterDefinitionBuilder WithExamples(params string[] examples)
+    {
+        ArgumentNullException.ThrowIfNull(examples);
+        this.Parameter.Examples = new EquatableList<string>(examples);
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public virtual IParameterDefinitionBuilder WithDefault(string @default)
+    {
+        ArgumentNullException.ThrowIfNull(@default);
+        this.Parameter.Default = @default;
         return this;
     }
 
